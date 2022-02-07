@@ -122,6 +122,12 @@ export const json = obj => async (ctx, next) => {
     return await next()
 };
 
+export const form = obj => async (ctx, next) => {
+    ctx.header('Content-Type', 'application/x-www-form-urlencoded')
+    ctx.body = `${new URLSearchParams(obj)}`
+    return await next()
+}
+
 export const file = (name, file, filename) =>
     async (ctx, next) => {
         if (!ctx.body)
