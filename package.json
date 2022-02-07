@@ -1,10 +1,19 @@
 {
   "name": "es-fetch-api",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "fetch.js",
   "license": "MIT",
   "type": "module",
   "dependencies": {
     "node-fetch": "^3.2.0"
-  }
+  },
+  "keywords": [
+    "http",
+    "fetch",
+    "axios",
+    "es",
+    "es6",
+    "readability",
+    "extensibility"
+  ]
 }
