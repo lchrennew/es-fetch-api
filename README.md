@@ -403,8 +403,25 @@ This middleware is used to declare the HTTP request is uploading files.
 It accepts three parameters:
 
 1. the name of FormData field contains the file
-2. an `File` object
+2. a `File` object
 3. give a filename, by default it's the original filename
+
+### `abortable` middleware
+
+This middleware injects AbortController::signal into fetch, so that you can abort the request as you wish.
+
+You can use it to implement manual abort, timeout abort and so on.
+
+When the AbortController::abort() is invoked, an exception will be thrown.
+
+```javascript
+import { getApi, abortable } from "es-fetch-api";
+
+const api = getApi('http://mydomain.com/api')
+const controller = new AbortController()
+setTimeout(() => controller.abort(), 1000)
+api(abortable(controller))
+```
 
 ## Middleware development
 
