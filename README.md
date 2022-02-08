@@ -2,6 +2,13 @@
 
 Very very very powerful, extensible http client for both node.js and browser.
 
+![NPM](https://img.shields.io/npm/l/es-fetch-api)
+![npm](https://img.shields.io/npm/v/es-fetch-api)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/lchrennew/es-fetch-api)
+![GitHub file size in bytes](https://img.shields.io/github/size/lchrennew/es-fetch-api/fetch.js)
+![GitHub issues](https://img.shields.io/github/issues-raw/lchrennew/es-fetch-api)
+![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/lchrennew/es-fetch-api)
+
 ## Why should you use ES-Fetch API?
 
 Still using `axios`? `ES-Fetch-API` creates sunny world for you.
