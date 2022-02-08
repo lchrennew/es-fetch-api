@@ -418,3 +418,5 @@ The `ctx` is completely same as the [Concept Request](https://fetch.spec.whatwg.
 exposes a helper method used to set request headers, see `useToken` middleware example in this document.
 
 
+## License
+[MIT](./LICENSE)
