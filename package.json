@@ -15,5 +15,9 @@
     "es6",
     "readability",
     "extensibility"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lchrennew/es-fetch-api.git"
+  }
 }
