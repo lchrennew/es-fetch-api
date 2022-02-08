@@ -152,3 +152,8 @@ export const query = (params, append = false) => async (ctx, next) => {
     }
     return await next()
 }
+
+export const abortable = controller => async (ctx, next) => {
+    ctx.signal = controller.signal
+    return await next()
+}

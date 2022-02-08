@@ -221,7 +221,7 @@ When the user doesn't exist, the resposne should be:
 ```text
 Status: 404 NotFound
 Content-Type: application/json
-Body: {ok: false, error: 'User doesn't exist.'}
+Body: {ok: false, message: 'User doesn't exist.'}
 ```
 
 Using axios:
@@ -235,11 +235,11 @@ const getUser = async id => {
         const response = await apiV1.get({ url: `/user`, params: { id } })
         console.log(response.status, response.statusText)
         // So many data and error, make me confused...don't forget write the .data after the response :)
-        const { data: user } = response.data
-        return user
+        const { data } = response.data
+        return data
     } catch (error) {
         // which error is the error i want to use?
-        console.log(error.response.data.error ?? error.message)
+        console.log(error.response.data.message ?? error.message)
     }
 }
 ```
@@ -255,12 +255,11 @@ const getUser = async id => {
     try {
         const response = await apiV1(`user`, query({ id }))
         console.log(response.status, response.statusText)
-        // read what you see
-        const { ok, data, error } = await response.json()
-        // throw the error as you will
-        if (!ok) throw error
+        const { ok, data, message } = await response.json() // read what you see
+        if (!ok) throw { message }  // throw the error as you will
+        return data
     } catch (error) {
-        console.log(error.message ?? error)
+        console.log(error.message)
     }
 }
 ```
@@ -274,11 +273,18 @@ import axios from 'axios'
 
 // can you understand it? 
 // There seems no way to process errors in a unified way?
-const apiV1 = axios.create({
-    baseURL: 'http://yourdomain.com/api/v1', transformResponse: [
-        ({ data }) => data
-    ]
-})
+const apiV1 = axios.create({ baseURL: 'http://yourdomain.com/api/v1' })
+
+const getOne = async config => {
+    try {
+        const resposne = await apiV1(config)
+        console.log(response.status, response.statusText)
+        const { ok, data, message } = response.data
+        return data
+    } catch (error) {
+        console.log(error.response.data.message ?? error.message)
+    }
+}
 ```
 
 Using es-fetch-api, great readability:
@@ -290,12 +296,11 @@ const apiV1 = getApi('http://yourdomain.com/api/v1')
 
 const getOne = async (...args) => {
     try {
-        const resposne = await apiV1(...args, useToken) // you still can append custom middlewares here to process every invocation.
+        const resposne = await apiV1(...args, useToken) // you can append custom middlewares here.
         console.log(response.status, response.statusText)
-        // read what you see
-        const { ok, data, error } = await response.json()
-        // throw the error as you will
-        if (!ok) throw error
+        const { ok, data, message } = await response.json() // read what you see
+        if (!ok) throw { message }  // throw the error as you will
+        return data
     } catch (error) {
         console.log(error.message ?? error)
     }
@@ -417,6 +422,6 @@ const example = async (ctx, next) => {
 The `ctx` is completely same as the [Concept Request](https://fetch.spec.whatwg.org/#concept-request), except the `ctx`
 exposes a helper method used to set request headers, see `useToken` middleware example in this document.
 
-
 ## License
+
 [MIT](./LICENSE)
