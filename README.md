@@ -28,7 +28,7 @@ GET http://yourdomain.com/api/v1/user?id=12345
 
 Using axios:
 
-```ecmascript 6
+```javascript
 import axios from 'axios'
 
 // unneccessarily indicate that 'http://yourdomain.com/api/v1' means baseURL
@@ -42,7 +42,7 @@ const response = await getUser(12345)
 
 Using es-fetch-api, great readability:
 
-```ecmascript 6
+```javascript
 import { getApi, query } from "es-fetch-api";
 
 // without mincing words
@@ -66,7 +66,7 @@ Content-Type: application/json
 
 Using axios:
 
-```ecmascript 6
+```javascript
 import axios from 'axios'
 
 const apiV1 = axios.create({ baseURL: 'http://yourdomain.com/api/v1' })
@@ -82,7 +82,7 @@ const resposne = await createUser({
 
 Using es-fetch-api, better readability:
 
-```ecmascript 6
+```javascript
 import { getApi, json, POST } from "es-fetch-api";
 
 const apiV1 = getApi('http://yourdomain.com/api/v1')
@@ -111,7 +111,7 @@ X-Timestamp: ##########
 
 Using axios:
 
-```ecmascript 6
+```javascript
 import axios from 'axios'
 import { getToken } from 'token-helper'
 
@@ -136,7 +136,7 @@ const resposne = await createUser({
 
 Using es-fetch-api, better readability, better maintainability:
 
-```ecmascript 6
+```javascript
 import { getApi, json, POST } from "es-fetch-api";
 import { getToken } from 'token-helper'
 
@@ -165,7 +165,7 @@ const resposne = await createUser({
 
 Using axios:
 
-```ecmascript 6
+```javascript
 import axios from 'axios'
 import { getToken } from 'token-helper'
 
@@ -185,7 +185,7 @@ const getUser = async id => await apiV1.get({ url: `/user`, params: { id } })
 
 Using es-fetch-api, better readability, better maintainability:
 
-```ecmascript 6
+```javascript
 import { getApi, json, POST } from "es-fetch-api";
 import { getToken } from 'token-helper'
 
@@ -226,7 +226,7 @@ Body: {ok: false, error: 'User doesn't exist.'}
 
 Using axios:
 
-```ecmascript 6
+```javascript
 import axios from 'axios'
 
 const apiV1 = axios.create({ baseURL: 'http://yourdomain.com/api/v1' })
@@ -246,7 +246,7 @@ const getUser = async id => {
 
 Using es-fetch-api, great readability:
 
-```ecmascript 6
+```javascript
 import { getApi, query } from "es-fetch-api";
 
 const apiV1 = getApi('http://yourdomain.com/api/v1')
@@ -269,7 +269,7 @@ const getUser = async id => {
 
 Using axios:
 
-```ecmascript 6
+```javascript
 import axios from 'axios'
 
 // can you understand it? 
@@ -283,7 +283,7 @@ const apiV1 = axios.create({
 
 Using es-fetch-api, great readability:
 
-```ecmascript 6
+```javascript
 import { getApi, query } from "es-fetch-api";
 
 const apiV1 = getApi('http://yourdomain.com/api/v1')
@@ -318,7 +318,7 @@ more complexity, no matter you want to process request and response in any unifi
 This middleware is used to set HTTP method, it accepts a string parameter for method name to use. If an unsupported
 method name is used, an exception will be thrown.
 
-```ecmascript 6
+```javascript
 import { getApi, method } from "es-fetch-api";
 
 const api = getApi('http://mydomain.com/api')
@@ -330,7 +330,7 @@ const response = api('/', method('DELETE'))
 
 `GET`, `POST`, `PUT`, `PATCH` and `DELETE`, these are shorthands for each corresponding `method`.
 
-```ecmascript 6
+```javascript
 import { getApi, DELETE } from "es-fetch-api";
 
 const api = getApi('http://mydomain.com/api')
@@ -346,7 +346,7 @@ It accepts an Object parameter to pass the body object in.
 
 When you use this middleware, the `Content-Type: application/json` header will be set automatically.
 
-```ecmascript 6
+```javascript
 import { getApi, POST, json } from "es-fetch-api";
 
 const api = getApi('http://mydomain.com/api')
@@ -365,7 +365,7 @@ It accepts two parameters.
 2. a Boolean, used to indicate whether each query parameter value should be appended to existed values. By Default,
    it's `false`.
 
-```ecmascript 6
+```javascript
 import { getApi, query } from "es-fetch-api";
 
 const api = getApi('http://mydomain.com/api?hello=1')
@@ -383,7 +383,7 @@ It accepts an Object parameter to pass form data in.
 
 When you use this middleware, the `Content-Type: application/x-www-form-urlencoded` header will be set automatically.
 
-```ecmascript 6
+```javascript
 import { getApi, form } from "es-fetch-api";
 
 const api = getApi('http://mydomain.com/api')
@@ -405,7 +405,7 @@ It accepts three parameters:
 
 Each middleware MUST follow the same signature, finally `return await next()`.
 
-```ecmascript 6
+```javascript
 const example = async (ctx, next) => {
     // TODO: your logic
     return await next()
