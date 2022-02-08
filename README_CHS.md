@@ -437,7 +437,7 @@ const example = async (ctx, next) => {
 
 ### 关于`ctx`的更多信息
 
-`ctx`与[概念请求](https://fetch.spec.whatwg.org/#concept-request)完全相同，唯一不同的是， `ctx` 暴露了一个助手方法用来设置请求头，
+`ctx`与[概念请求](https://fetch.spec.whatwg.org/#concept-request) 完全相同，唯一不同的是， `ctx` 暴露了一个助手方法用来设置请求头，
 本文档前面的`useToken`就是个很好的例子。
 
 ## 许可
