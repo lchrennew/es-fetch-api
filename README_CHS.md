@@ -1,6 +1,6 @@
 # ES-Fetch-API
 
-Very very very powerful, extensible http client for both node.js and browser.
+特别特别特别强大而且可扩展的HTTP客户端，node.js和浏览器都能用！
 
 ![NPM](https://img.shields.io/npm/l/es-fetch-api)
 ![npm](https://img.shields.io/npm/v/es-fetch-api)
@@ -9,50 +9,49 @@ Very very very powerful, extensible http client for both node.js and browser.
 ![GitHub issues](https://img.shields.io/github/issues-raw/lchrennew/es-fetch-api)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/lchrennew/es-fetch-api)
 
-## Why should you use ES-Fetch API?
+## 为啥要用ES-Fetch-API?
 
-Still using `axios`? `ES-Fetch-API` creates sunny world for you.
+还在用`axios`? `ES-Fetch-API`让你的世界更晴朗。
 
-### i. It's extremely light-weight and built on the native fetch API.
+### i. 超级轻量化，基于原生的fetch API打造
 
-Comparing to axios which is ~400kB, `es-fetch-api` is just ~6kB. Because es-fetch-api is designed for native fetch API
-compatible environments.
+axios大约400kB，相比之下，`es-fetch-api`只有约6kB（源码）。这是因为，es-fetch-api专门未支持原生fetch API的环境而创建。
 
-References:
+参考：
 
-1. [fetch API on MDN](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#browser_compatibility)
-2. [fetch API on whatwg.org](https://fetch.spec.whatwg.org/)
+1. [MDN上的fetch API文档](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#browser_compatibility)
+2. [whatwg.org上的fetch API文档](https://fetch.spec.whatwg.org/)
 
-### ii. Enables maximized readability, extensibility, maintainability and minimized complexity.
+### ii. 让最强可读性、可扩展性、可维护性以及最低复杂性成为可能
 
-#### 1. The simplest example
+#### 1. 最简单的例子
 
-Expected request:
+期望的请求：
 
 ```http request
 GET http://yourdomain.com/api/v1/user?id=12345
 ```
 
-Using axios:
+用axios实现:
 
 ```javascript
 import axios from 'axios'
 
-// unneccessarily indicate that 'http://yourdomain.com/api/v1' means baseURL
+// 没必要声明'http://yourdomain.com/api/v1'的意思是baseURL
 const apiV1 = axios.create({ baseURL: 'http://yourdomain.com/api/v1' })
 
-// unneccessarily indicate that `/user` means url
+// 没必要声明`/user`的意思是URL
 const getUser = async id => await apiV1.get({ url: `/user`, params: { id } })
 
 const response = await getUser(12345)
 ```
 
-Using es-fetch-api, great readability:
+用es-fetch-api，得到了棒棒的可读性：
 
 ```javascript
 import { getApi, query } from "es-fetch-api";
 
-// without mincing words
+// 言简意赅
 const apiV1 = getApi('http://yourdomain.com/api/v1')
 
 const getUser = async id => await apiV1(`user`, query({ id }))
@@ -60,9 +59,9 @@ const getUser = async id => await apiV1(`user`, query({ id }))
 const response = await getUser(12345)
 ```
 
-#### 2. More complicated example (using built-in middlewares)
+#### 2. 更复杂一点的例子（使用内建的中间件）
 
-Expected request:
+期望的请求：
 
 ```http request
 POST http://yourdomain.com/api/v1/user/
@@ -71,14 +70,14 @@ Content-Type: application/json
 {"firstName":"Fred","lastName":"Flintstone"}
 ```
 
-Using axios:
+使用axios实现：
 
 ```javascript
 import axios from 'axios'
 
 const apiV1 = axios.create({ baseURL: 'http://yourdomain.com/api/v1' })
 
-// which format is used to post data?
+// post数据用啥数据格式呢？
 const createUser = async user => await apiV1.post(`/user`, user)
 
 const resposne = await createUser({
@@ -87,14 +86,14 @@ const resposne = await createUser({
 })
 ```
 
-Using es-fetch-api, better readability:
+使用es-fetch-api来获得更好的可读性：
 
 ```javascript
 import { getApi, json, POST } from "es-fetch-api";
 
 const apiV1 = getApi('http://yourdomain.com/api/v1')
 
-// read what you see infomation losslessly 
+// 看见啥说啥，而且信息没保留 
 const createUser = async user => await apiV1(`user`, POST, json(user))
 
 const resposne = await createUser({
@@ -103,9 +102,9 @@ const resposne = await createUser({
 })
 ```
 
-#### 3. Create custom middleware to extend your code while keeping better readability.
+#### 3. 保证更好可读性的同时，创建自定义中间件来实现扩展代码。
 
-Expected request:
+期望的请求：
 
 ```http request
 POST http://yourdomain.com/api/v1/user/
@@ -116,19 +115,19 @@ X-Timestamp: ##########
 {"firstName":"Fred","lastName":"Flintstone"}
 ```
 
-Using axios:
+使用axios实现：
 
 ```javascript
 import axios from 'axios'
 import { getToken } from 'token-helper'
 
-// easy to read? it's hard to understand they return headers.
+// 容易读懂吗？几乎没办法确定这两个函数返回的是请求头
 const useToken = async () => ({ 'Authorization': `Token ${await getToken()}` })
 const useTimestamp = async () => ({ 'X-Timestamp': Date.now() })
 
 const apiV1 = axios.create({ baseURL: 'http://yourdomain.com/api/v1' })
 
-// easy to read? Maybe or not, but too long winded to maintain.
+// 容易读懂吗？可能不同的人看法就不一样了，但无论如何，这么写代码太啰哩啰嗦了，咋维护啊？
 const createUser = async user => await apiV1.post({
     url: `/user`,
     data: user,
@@ -147,7 +146,7 @@ Using es-fetch-api, better readability, better maintainability:
 import { getApi, json, POST } from "es-fetch-api";
 import { getToken } from 'token-helper'
 
-// read what you see
+// 所见即所读
 const useToken = async (ctx, next) => {
     ctx.header('Authorization', `Token ${await getToken()}`)
     return await next()
@@ -159,7 +158,7 @@ const useTimestamp = async (ctx, next) => {
 
 const apiV1 = getApi('http://yourdomain.com/api/v1')
 
-// read what you see infomation-losslessly 
+// 看见啥读啥，信息不走样 
 const createUser = async user => await apiV1(`user`, POST, json(user), useToken, useTimestamp)
 
 const resposne = await createUser({
@@ -168,9 +167,9 @@ const resposne = await createUser({
 })
 ```
 
-#### 4. To use custom middlewares for every invocation.
+#### 4. 用自定义中间件处理所有调用
 
-Using axios:
+使用axios实现：
 
 ```javascript
 import axios from 'axios'
@@ -179,7 +178,7 @@ import { getToken } from 'token-helper'
 const useToken = async () => ({ 'Authorization': `Token ${await getToken()}` })
 const useTimestamp = async () => ({ 'X-Timestamp': Date.now() })
 
-// headers is static, especially the X-Timestamp. Easy to maintain? No!
+// headers是静态的，尤其是X-Timestamp，说好的每个请求时间戳不一样呢？容易维护吗？显然不容易！
 const apiV1 = axios.create({
     baseURL: 'http://yourdomain.com/api/v1',
     headers: { ...await useToken(), ...await useTimestamp() }
@@ -190,7 +189,7 @@ const getUser = async id => await apiV1.get({ url: `/user`, params: { id } })
 
 ```
 
-Using es-fetch-api, better readability, better maintainability:
+使用es-fetch-api来得到更好的可读性、更好的可维护性：
 
 ```javascript
 import { getApi, json, POST } from "es-fetch-api";
@@ -205,17 +204,17 @@ const useTimestamp = async (ctx, next) => {
     return await next()
 }
 
-// Just append the middlewares, so easy.
+// 只要追加中间件到参数列表就可以啦！就这个feel倍儿爽！
 const apiV1 = (...args) => getApi('http://yourdomain.com/api/v1')(...args, useToken, useTimestamp)
 
 const createUser = async user => await apiV1(`user`, POST, json(user))
 ```
 
-#### 5. Process response.
+#### 5. 处理响应
 
-For instance with the getUser function.
+还以getUser函数为例。
 
-When the user exists, the response should be:
+如果用户存在，响应应该这样：
 
 ```text
 Status: 200 OK
@@ -223,7 +222,7 @@ Content-Type: application/json
 Body: {ok: true, data: {"firstName": "Chun", "lastName": "Li"}}
 ```
 
-When the user doesn't exist, the resposne should be:
+当用户不存在，响应应该这样：
 
 ```text
 Status: 404 NotFound
@@ -231,7 +230,7 @@ Content-Type: application/json
 Body: {ok: false, message: 'User doesn't exist.'}
 ```
 
-Using axios:
+使用axios：
 
 ```javascript
 import axios from 'axios'
@@ -241,17 +240,17 @@ const getUser = async id => {
     try {
         const response = await apiV1.get({ url: `/user`, params: { id } })
         console.log(response.status, response.statusText)
-        // So many data and error, make me confused...don't forget write the .data after the response :)
+        // 这么多data，晕菜，别忘了在response后面还有个data，呵呵
         const { data } = response.data
         return data
     } catch (error) {
-        // which error is the error i want to use?
+        // 我要用哪个error？
         console.log(error.response.data.message ?? error.message)
     }
 }
 ```
 
-Using es-fetch-api, great readability:
+使用es-fetch-api实现，可读性超燃：
 
 ```javascript
 import { getApi, query } from "es-fetch-api";
@@ -262,8 +261,8 @@ const getUser = async id => {
     try {
         const response = await apiV1(`user`, query({ id }))
         console.log(response.status, response.statusText)
-        const { ok, data, message } = await response.json() // read what you see
-        if (!ok) throw { message }  // throw the error as you will
+        const { ok, data, message } = await response.json() // 见着啥读啥
+        if (!ok) throw { message }  // 想抛异常就抛
         return data
     } catch (error) {
         console.log(error.message)
@@ -271,15 +270,13 @@ const getUser = async id => {
 }
 ```
 
-#### 6. Process responses in a unified way
+#### 6. 统一处理响应
 
-Using axios:
+使用axios实现：
 
 ```javascript
 import axios from 'axios'
 
-// can you understand it? 
-// There seems no way to process errors in a unified way?
 const apiV1 = axios.create({ baseURL: 'http://yourdomain.com/api/v1' })
 
 const getOne = async config => {
@@ -294,7 +291,7 @@ const getOne = async config => {
 }
 ```
 
-Using es-fetch-api, great readability:
+用es-fetch-api，可读性超燃：
 
 ```javascript
 import { getApi, query } from "es-fetch-api";
@@ -303,32 +300,31 @@ const apiV1 = getApi('http://yourdomain.com/api/v1')
 
 const getOne = async (...args) => {
     try {
-        const resposne = await apiV1(...args, useToken) // you can append custom middlewares here.
+        const resposne = await apiV1(...args, useToken) // 你可以追加自定义中间件
         console.log(response.status, response.statusText)
-        const { ok, data, message } = await response.json() // read what you see
-        if (!ok) throw { message }  // throw the error as you will
+        const { ok, data, message } = await response.json() // 看着啥读啥
+        if (!ok) throw { message }  // 想抛异常就抛
         return data
     } catch (error) {
         console.log(error.message ?? error)
     }
 }
 
-// getOne is the unified way to process every response. You could also write other logics such as getList
-// read what you see
+// getOne可以统一处理每个响应。你还可以封装其他逻辑，比如getList
+// 看着啥读啥
 const getUser = async id => getOne(`user`, query({ id }))
 ```
 
-### One word reason
+### 一句话理由
 
-In es-fetch-api, each api invocation is a middlewares-chain, which means everything is extensible without introducing
-more complexity, no matter you want to process request and response in any unified way or case by case.
+在es-fetch-api中，每次调用都是一条中间件链，采用这种结构意味着你能够在不引入更多复杂性的情况下，实现扩展，无论你单独处理请求和响应，还是采用任
+何统一的方式。
 
-## Built-in middlewares
+## 内建中间件
 
-### `method` middleware
+### `method`中间件
 
-This middleware is used to set HTTP method, it accepts a string parameter for method name to use. If an unsupported
-method name is used, an exception will be thrown.
+这个中间件用于设置HTTP请求使用的方法，它接收一个字符串参数用来传入方法名称。如果使用了不支持的方法名称，就会抛出异常。
 
 ```javascript
 import { getApi, method } from "es-fetch-api";
@@ -338,9 +334,9 @@ const api = getApi('http://mydomain.com/api')
 const response = api('/', method('DELETE'))
 ```
 
-### `method` aliases
+### `method`别名
 
-`GET`, `POST`, `PUT`, `PATCH` and `DELETE`, these are shorthands for each corresponding `method`.
+`GET`、`POST`、`PUT`、`PATCH`和`DELETE`这几个中间件是对应`method`的缩写。
 
 ```javascript
 import { getApi, DELETE } from "es-fetch-api";
@@ -350,13 +346,13 @@ const api = getApi('http://mydomain.com/api')
 const response = api('/', DELETE)
 ```
 
-### `json` middleware
+### `json`中间件
 
-This middleware is used to declare the HTTP request body is an JSON object.
+这个中间件用于声明HTTP请求体数据是一个JSON对象。
 
-It accepts an Object parameter to pass the body object in.
+这个中间件接收一个Object参数，用于传入请求体对象。
 
-When you use this middleware, the `Content-Type: application/json` header will be set automatically.
+使用此中间件时，`Content-Type: application/json`头会被自动设置。
 
 ```javascript
 import { getApi, POST, json } from "es-fetch-api";
@@ -366,16 +362,14 @@ const api = getApi('http://mydomain.com/api')
 const response = api('/', POST, json({ hello, world }))
 ```
 
-### `query` middleware
+### `query`中间件
 
-This middleware is used to declare the query string parameters of the request URL.
+这个中间件用来声明请求URL中的查询字符串参数。
 
-It accepts two parameters.
+它接收两个参数。
 
-1. an Object, whose keys are the query parameter names and their corresponding value(s) are the query parameter values.
-   If a value is an array with more than one element, then it will be an multi-value parameter.
-2. a Boolean, used to indicate whether each query parameter value should be appended to existed values. By Default,
-   it's `false`.
+1. 第一个是Object参数，这个对象的键被用于查询参数名，对应的值用于查询参数值。如果值是多元素的数组，就会设置成多值参数。
+2. 第二个是个Boolean参数，用于指明是否将参数值追加到已有的参数上。默认为`false`。
 
 ```javascript
 import { getApi, query } from "es-fetch-api";
@@ -387,13 +381,13 @@ api(query({ hello: 'world' }, true)) // http://mydomain.com/api?hello=1&hello=wo
 api(query({ hello: [ 'Bing', 'Dwen', 'Dwen' ], world: '2022' })) // http://mydomain.com/api?hello=Bing&hello=Dwen&hello=Dwen&world=2022
 ```
 
-### `form` middleware
+### `form`中间件
 
-This middleware is used to declare the HTTP request body is form data.
+这个中间件用于声明HTTP请求体是表单数据。
 
-It accepts an Object parameter to pass form data in.
+它接收一个Object参数来传入表单数据。
 
-When you use this middleware, the `Content-Type: application/x-www-form-urlencoded` header will be set automatically.
+当你使用这个中间件，`Content-Type: application/x-www-form-urlencoded`请求头会被自动设置。
 
 ```javascript
 import { getApi, form } from "es-fetch-api";
@@ -403,23 +397,23 @@ const api = getApi('http://mydomain.com/api')
 api(POST, form({ hello: 'world' })) // hello=world
 ```
 
-### `file` middleware
+### `file`中间件
 
-This middleware is used to declare the HTTP request is uploading files.
+这个中间件用于声明HTTP请求将上传文件。
 
-It accepts three parameters:
+它接收三个参数：
 
-1. the name of FormData field contains the file
-2. a `File` object
-3. give a filename, by default it's the original filename
+1. 文件所在表单域的名字
+2. 一个`File`对象
+3. 给定一个文件名，默认为原始文件名
 
-### `abortable` middleware
+### `abortable`中间件
 
-This middleware injects AbortController::signal into fetch, so that you can abort the request as you wish.
+这个中间件会将AbortController::signal注入到fetch中，这样，你就可以在需要的时候放弃请求了。
 
-You can use it to implement manual abort, timeout abort and so on.
+比如，你可以用它实现手动放弃、超时放弃等。
 
-When the AbortController::abort() is invoked, an exception will be thrown.
+当AbortController::abort()被调用，就会有个异常抛出来。
 
 ```javascript
 import { getApi, abortable } from "es-fetch-api";
@@ -430,27 +424,27 @@ setTimeout(() => controller.abort(), 1000)
 api(abortable(controller))
 ```
 
-## Middleware development
+## 中间件开发
 
-Each middleware MUST follow the same signature, finally `return await next()`.
+每个中间件 ****必须**** 遵循相同签名，并最终`return await next()`。
 
 ```javascript
 const example = async (ctx, next) => {
-    // TODO: your logic
+    // TODO: 你的逻辑写在这
     return await next()
 }
 ```
 
-### More about the `ctx`
+### 关于`ctx`的更多信息
 
-The `ctx` is completely same as the [Concept Request](https://fetch.spec.whatwg.org/#concept-request), except the `ctx`
-exposes a helper method used to set request headers, see `useToken` middleware example in this document.
+`ctx`与[概念请求](https://fetch.spec.whatwg.org/#concept-request)完全相同，唯一不同的是， `ctx` 暴露了一个助手方法用来设置请求头，
+本文档前面的`useToken`就是个很好的例子。
 
-## License
+## 许可
 
 [MIT](./LICENSE)
 
 ## Translations
 
-- [Chinese](./README_CHS.md)
-- [English](./README.md)
+- [中文](./README_CHS.md)
+- [英文](./README.md)
