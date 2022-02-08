@@ -1,6 +1,6 @@
 # ES-Fetch-API
 
-Very very very powerful, expansible http client for both node.js and browser.
+Very very very powerful, extensible http client for both node.js and browser.
 
 ## Why should you use ES-Fetch API?
 
