@@ -30,7 +30,7 @@ References:
 
 Expected request:
 
-```http request
+```http
 GET http://yourdomain.com/api/v1/user?id=12345
 ```
 
@@ -65,7 +65,7 @@ const response = await getUser(12345)
 
 Expected request:
 
-```http request
+```http
 POST http://yourdomain.com/api/v1/user/
 Content-Type: application/json
 
@@ -108,7 +108,7 @@ const resposne = await createUser({
 
 Expected request:
 
-```http request
+```http
 POST http://yourdomain.com/api/v1/user/
 Content-Type: application/json
 Auhorization: Token ********
