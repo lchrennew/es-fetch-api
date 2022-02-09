@@ -64,16 +64,19 @@ const response = await getUser(12345)
 
 期望的请求：
 
-```http request
+``` http request
 POST http://yourdomain.com/api/v1/user/
 Content-Type: application/json
 
 {"firstName":"Fred","lastName":"Flintstone"}
 ```
 
+
 使用axios实现：
 
+
 ```javascript
+
 import axios from 'axios'
 
 const apiV1 = axios.create({ baseURL: 'http://yourdomain.com/api/v1' })
