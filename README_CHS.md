@@ -16,7 +16,7 @@
 
 ### i. 超级轻量化，基于原生的fetch API打造
 
-axios大约400kB，相比之下，`es-fetch-api`只有约6kB（源码）。这是因为，es-fetch-api专门未支持原生fetch API的环境而创建。
+axios大约400kB，相比之下，`es-fetch-api`只有约6kB（源码）。这是因为，es-fetch-api专门为支持原生fetch API的环境而创建。
 
 参考：
 
