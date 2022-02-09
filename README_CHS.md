@@ -29,7 +29,7 @@ axios大约400kB，相比之下，`es-fetch-api`只有约6kB（源码）。这�
 
 期望的请求：
 
-```http request
+```http
 GET http://yourdomain.com/api/v1/user?id=12345
 ```
 
@@ -64,7 +64,7 @@ const response = await getUser(12345)
 
 期望的请求：
 
-``` http request
+```http
 POST http://yourdomain.com/api/v1/user/
 Content-Type: application/json
 
@@ -110,7 +110,7 @@ const resposne = await createUser({
 
 期望的请求：
 
-```http request
+```http
 POST http://yourdomain.com/api/v1/user/
 Content-Type: application/json
 Auhorization: Token ********
