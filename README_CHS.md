@@ -1,4 +1,5 @@
 # ES-Fetch-API
+中文  |  [English](./README.md)
 
 特别特别特别强大而且可扩展的HTTP客户端，node.js和浏览器都能用！
 
@@ -444,7 +445,7 @@ const example = async (ctx, next) => {
 
 [MIT](./LICENSE)
 
-## Translations
+## 翻译
 
 - [中文](./README_CHS.md)
 - [英文](./README.md)
