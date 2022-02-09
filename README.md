@@ -1,4 +1,5 @@
 # ES-Fetch-API
+[中文](./README_CHS.md)  |  English
 
 Very very very powerful, extensible http client for both node.js and browser.
 
