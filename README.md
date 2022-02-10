@@ -445,7 +445,7 @@ const example = async (ctx, next) => {
 
 ### More about the `ctx`
 
-The `ctx` is completely same as the [Concept Request](https://fetch.spec.whatwg.org/#concept-request), except the `ctx`
+The `ctx` is completely same as the [Request](https://fetch.spec.whatwg.org/#request-class), except the `ctx`
 exposes a helper method used to set request headers, see `useToken` middleware example in this document.
 
 ## License
