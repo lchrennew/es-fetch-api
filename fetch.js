@@ -4,8 +4,8 @@
 // ver: 1.0.1 - node-es
 // https://fetch.spec.whatwg.org/#dom-request-method
 
-const fetch = typeof window !== 'undefined' ? window.fetch : (await import('node-fetch')).default
-
+let fetchPolyfilled = fetch
+export const polyfill = polifilled => fetchPolyfilled = polifilled
 export const credentials = {
     omit: 'omit',
     include: 'include',
@@ -85,7 +85,7 @@ export class WebApiContext {
     }
 
     async commit() {
-        this.response = await fetch(this.url, this);
+        this.response = await fetchPolyfilled(this.url, this);
         return this.response
     }
 }
