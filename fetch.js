@@ -4,8 +4,10 @@
 // ver: 1.0.1 - node-es
 // https://fetch.spec.whatwg.org/#dom-request-method
 
-let fetchPolyfilled = fetch
-export const polyfill = polifilled => fetchPolyfilled = polifilled
+let globalFetch
+if (typeof fetch === 'function') globalFetch = fetch
+export const use = fetch => globalFetch = fetch
+
 export const credentials = {
     omit: 'omit',
     include: 'include',
@@ -85,7 +87,7 @@ export class WebApiContext {
     }
 
     async commit() {
-        this.response = await fetchPolyfilled(this.url, this);
+        this.response = await globalFetch(this.url, this);
         return this.response
     }
 }

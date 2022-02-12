@@ -19,8 +19,6 @@
   },
   "files": [
     "fetch.js",
-    "LICENSE",
-    "README.md",
-    "README_CHS.md"
+    "LICENSE"
   ]
 }
