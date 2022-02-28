@@ -1,6 +1,6 @@
 {
   "name": "es-fetch-api",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "main": "fetch.js",
   "license": "MIT",
   "type": "module",
