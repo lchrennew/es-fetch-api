@@ -10,6 +10,7 @@ Very very very powerful, extensible http client for both node.js and browser.
 ![GitHub issues](https://img.shields.io/github/issues-raw/lchrennew/es-fetch-api)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/lchrennew/es-fetch-api)
 [![codebeat badge](https://codebeat.co/badges/8987f803-3d78-4959-89bd-6a374f7f3472)](https://codebeat.co/projects/github-com-lchrennew-es-fetch-api-main)
+[![CodeQL](https://github.com/lchrennew/es-fetch-api/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/lchrennew/es-fetch-api/actions/workflows/codeql-analysis.yml)
 
 ## Why should you use ES-Fetch API?
 
