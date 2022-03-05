@@ -88,6 +88,7 @@ export class WebApiContext {
 
     async commit() {
         this.response = await globalFetch(this.url, this);
+        this.response.context = this
         return this.response
     }
 }
@@ -95,7 +96,7 @@ export class WebApiContext {
 export const getApi = webApi => async (...args) => {
     const endpoint = typeof args[0] === 'string' ? args.shift() : undefined
     const ctx = new WebApiContext(webApi, endpoint);
-    const middlewares = [ ...args ];
+    const middlewares = [ ...args ].flat();
     const next = async () => {
         const middleware = middlewares.shift();
         if (middleware) {
@@ -107,55 +108,4 @@ export const getApi = webApi => async (...args) => {
     return await next()
 };
 
-export const method = m => async (ctx, next) => {
-    ctx.method = m;
-    return await next()
-};
 
-export const GET = method(methods.GET);
-export const POST = method(methods.POST);
-export const PUT = method(methods.PUT);
-export const DELETE = method(methods.DELETE);
-export const PATCH = method(methods.PATCH);
-
-export const json = obj => async (ctx, next) => {
-    ctx.header('Content-Type', 'application/json');
-    ctx.body = JSON.stringify(obj);
-    return await next()
-};
-
-export const form = obj => async (ctx, next) => {
-    ctx.header('Content-Type', 'application/x-www-form-urlencoded')
-    ctx.body = `${new URLSearchParams(obj)}`
-    return await next()
-}
-
-export const file = (name, file, filename) =>
-    async (ctx, next) => {
-        if (!ctx.body)
-            ctx.body = new FormData()
-        if (filename)
-            ctx.body.append(name, file, filename)
-        else
-            ctx.body.append(name, file)
-        ctx.method = methods.POST
-        return await next()
-    }
-
-export const query = (params, append = false) => async (ctx, next) => {
-    const appendValue = (name, value) => ctx.url.searchParams.append(name, value)
-    const appendArray = (name, ...values) => values.forEach(value => appendValue(name, value))
-    for (const paramName in params) {
-        const paramValue = params[paramName]
-        if (!append) ctx.url.searchParams.delete(paramName)
-        const multiple = paramValue instanceof Array
-        if (multiple) appendArray(paramName, ...paramValue)
-        else appendValue(paramName, paramValue)
-    }
-    return await next()
-}
-
-export const abortable = controller => async (ctx, next) => {
-    ctx.signal = controller.signal
-    return await next()
-}
