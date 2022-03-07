@@ -97,7 +97,7 @@ export const getApi = webApi => async (...args) => {
     const endpoint = typeof args[0] === 'string' ? args.shift() : undefined
     const ctx = new WebApiContext(webApi, endpoint);
     const middlewares = [ ...args ].flat();
-    const next = async () => {
+    const next = () => {
         const middleware = middlewares.shift();
         if (!middleware) return ctx.commit()
         return middleware(ctx, next)

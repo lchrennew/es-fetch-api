@@ -435,12 +435,19 @@ api(abortable(controller))
 
 ## Middleware development
 
-Each middleware MUST follow the same signature, finally `return await next()`.
+Each middleware follow the same signature (`Function` and `AsyncFunction` both OK) and finally `return next()`.
 
+```javascript
+const example = (ctx, next) => {
+    // TODO: your logic
+    return next()
+}
+```
+or
 ```javascript
 const example = async (ctx, next) => {
     // TODO: your logic
-    return await next()
+    return next()
 }
 ```
 
