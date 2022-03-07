@@ -1,13 +1,11 @@
-import { methods } from "../fetch.js";
-
 /**
  * https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods
  * @param m
  * @return {function(*, *): Promise<*>}
  */
-const method = m => async (ctx, next) => {
+const method = m => (ctx, next) => {
     ctx.method = m;
-    return await next()
+    return next()
 };
 /**
  * GET方法请求一个指定资源的表示形式. 使用GET的请求应该只被用于获取数据。

@@ -1,4 +1,8 @@
-import { abortable, getApi, json, POST, query } from "../../fetch.js";
+import { getApi, } from "../../fetch.js";
+import { abortable } from "../../middlewares/abortable.js";
+import { json } from "../../middlewares/body.js";
+import { POST } from "../../middlewares/methods.js";
+import { query } from "../../middlewares/query.js";
 
 const api = getApi('http://localhost:8080')
 setInterval(async () => {

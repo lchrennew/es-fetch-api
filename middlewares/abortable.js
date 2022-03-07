@@ -1,4 +1,4 @@
-export const abortable = controller => async (ctx, next) => {
+export const abortable = controller => (ctx, next) => {
     ctx.signal = controller.signal
-    return await next()
+    return next()
 }

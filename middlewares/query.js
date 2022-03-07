@@ -1,4 +1,4 @@
-export const query = (params, append = false) => async (ctx, next) => {
+export const query = (params, append = false) => (ctx, next) => {
     const appendValue = (name, value) => ctx.url.searchParams.append(name, value)
     const appendArray = (name, ...values) => values.forEach(value => appendValue(name, value))
     for (const paramName in params) {
@@ -8,5 +8,5 @@ export const query = (params, append = false) => async (ctx, next) => {
         if (multiple) appendArray(paramName, ...paramValue)
         else appendValue(paramName, paramValue)
     }
-    return await next()
+    return next()
 }

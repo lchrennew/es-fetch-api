@@ -99,13 +99,10 @@ export const getApi = webApi => async (...args) => {
     const middlewares = [ ...args ].flat();
     const next = async () => {
         const middleware = middlewares.shift();
-        if (middleware) {
-            return await middleware(ctx, next)
-        } else {
-            return ctx.commit()
-        }
+        if (!middleware) return ctx.commit()
+        return middleware(ctx, next)
     };
-    return await next()
+    return next()
 };
 
 
