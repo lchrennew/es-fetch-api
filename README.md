@@ -1,5 +1,6 @@
 # ES-Fetch-API
-[中文](./README_CHS.md)  |  English
+
+[中文](./README_CHS.md)  | English
 
 Very very very powerful, extensible http client for both node.js and browser.
 
@@ -53,7 +54,8 @@ const response = await getUser(12345)
 Using es-fetch-api, great readability:
 
 ```javascript
-import { getApi, query } from "es-fetch-api";
+import { getApi } from "es-fetch-api";
+import { query } from 'es-fetch-api/middelwares/query.js'
 
 // without mincing words
 const apiV1 = getApi('http://yourdomain.com/api/v1')
@@ -67,7 +69,7 @@ const response = await getUser(12345)
 
 Expected request:
 
-```http
+```
 POST http://yourdomain.com/api/v1/user/
 Content-Type: application/json
 
@@ -93,7 +95,9 @@ const resposne = await createUser({
 Using es-fetch-api, better readability:
 
 ```javascript
-import { getApi, json, POST } from "es-fetch-api";
+import { getApi } from "es-fetch-api";
+import { json } from 'es-fetch-api/middelwares/body.js'
+import { POST } from 'es-fetch-api/middelwares/methods.js'
 
 const apiV1 = getApi('http://yourdomain.com/api/v1')
 
@@ -110,7 +114,7 @@ const resposne = await createUser({
 
 Expected request:
 
-```http
+```
 POST http://yourdomain.com/api/v1/user/
 Content-Type: application/json
 Auhorization: Token ********
@@ -147,7 +151,9 @@ const resposne = await createUser({
 Using es-fetch-api, better readability, better maintainability:
 
 ```javascript
-import { getApi, json, POST } from "es-fetch-api";
+import { getApi } from "es-fetch-api";
+import { json } from 'es-fetch-api/middelwares/body.js'
+import { POST } from 'es-fetch-api/middelwares/methods.js'
 import { getToken } from 'token-helper'
 
 // read what you see
@@ -196,7 +202,9 @@ const getUser = async id => await apiV1.get({ url: `/user`, params: { id } })
 Using es-fetch-api, better readability, better maintainability:
 
 ```javascript
-import { getApi, json, POST } from "es-fetch-api";
+import { getApi } from "es-fetch-api";
+import { json } from 'es-fetch-api/middelwares/body.js'
+import { POST } from 'es-fetch-api/middelwares/methods.js'
 import { getToken } from 'token-helper'
 
 const useToken = async (ctx, next) => {
@@ -257,7 +265,8 @@ const getUser = async id => {
 Using es-fetch-api, great readability:
 
 ```javascript
-import { getApi, query } from "es-fetch-api";
+import { getApi } from "es-fetch-api";
+import { query } from 'es-fetch-api/middelwares/query.js'
 
 const apiV1 = getApi('http://yourdomain.com/api/v1')
 
@@ -300,7 +309,8 @@ const getOne = async config => {
 Using es-fetch-api, great readability:
 
 ```javascript
-import { getApi, query } from "es-fetch-api";
+import { getApi } from "es-fetch-api";
+import { query } from 'es-fetch-api/middelwares/query.js'
 
 const apiV1 = getApi('http://yourdomain.com/api/v1')
 
@@ -334,7 +344,8 @@ This middleware is used to set HTTP method, it accepts a string parameter for me
 method name is used, an exception will be thrown.
 
 ```javascript
-import { getApi, method } from "es-fetch-api";
+import { getApi } from "es-fetch-api";
+import { method } from 'es-fetch-api/middelwares/methods.js'
 
 const api = getApi('http://mydomain.com/api')
 
@@ -346,7 +357,8 @@ const response = api('/', method('DELETE'))
 `GET`, `POST`, `PUT`, `PATCH` and `DELETE`, these are shorthands for each corresponding `method`.
 
 ```javascript
-import { getApi, DELETE } from "es-fetch-api";
+import { getApi } from "es-fetch-api";
+import { DELETE } from 'es-fetch-api/middelwares/methods.js'
 
 const api = getApi('http://mydomain.com/api')
 
@@ -362,7 +374,9 @@ It accepts an Object parameter to pass the body object in.
 When you use this middleware, the `Content-Type: application/json` header will be set automatically.
 
 ```javascript
-import { getApi, POST, json } from "es-fetch-api";
+import { getApi } from "es-fetch-api";
+import { json } from 'es-fetch-api/middelwares/body.js'
+import { POST } from 'es-fetch-api/middelwares/methods.js'
 
 const api = getApi('http://mydomain.com/api')
 
@@ -381,7 +395,8 @@ It accepts two parameters.
    it's `false`.
 
 ```javascript
-import { getApi, query } from "es-fetch-api";
+import { getApi } from "es-fetch-api";
+import { query } from 'es-fetch-api/middelwares/query.js'
 
 const api = getApi('http://mydomain.com/api?hello=1')
 
@@ -399,7 +414,8 @@ It accepts an Object parameter to pass form data in.
 When you use this middleware, the `Content-Type: application/x-www-form-urlencoded` header will be set automatically.
 
 ```javascript
-import { getApi, form } from "es-fetch-api";
+import { getApi } from "es-fetch-api";
+import { form } from 'es-fetch-api/middelwares/body.js'
 
 const api = getApi('http://mydomain.com/api')
 
@@ -425,7 +441,8 @@ You can use it to implement manual abort, timeout abort and so on.
 When the AbortController::abort() is invoked, an exception will be thrown.
 
 ```javascript
-import { getApi, abortable } from "es-fetch-api";
+import { getApi } from "es-fetch-api";
+import { abortable } from 'es-fetch-api/middelwares/abortable.js'
 
 const api = getApi('http://mydomain.com/api')
 const controller = new AbortController()
@@ -443,7 +460,9 @@ const example = (ctx, next) => {
     return next()
 }
 ```
+
 or
+
 ```javascript
 const example = async (ctx, next) => {
     // TODO: your logic
