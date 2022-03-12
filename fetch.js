@@ -55,7 +55,12 @@ export const referrers = {
     client: 'about:client'
 };
 
-const joinUrl = (baseUrl, ...paths) => [ baseUrl.replace(/\/$/, ''), ...paths.filter(path => path).map(path => path.replace(/^\//, '').replace('/\/$/', '')) ].join('/')
+const joinUrl = (baseUrl, ...paths) =>
+    [
+        baseUrl.replace(/\/$/, ''),
+        ...paths
+            .map(path => path.replaceAll(/^\/|\/$/g, ''))
+            .filter(path => path) ].join('/')
 
 const isURL = target => {
     try {
