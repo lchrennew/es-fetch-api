@@ -3,7 +3,7 @@
  * @param m
  * @return {function(*, *): Promise<*>}
  */
-const method = m => (ctx, next) => {
+export const method = m => (ctx, next) => {
     ctx.method = m;
     return next()
 };
