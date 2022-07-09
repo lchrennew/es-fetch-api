@@ -59,7 +59,7 @@ const joinUrl = (baseUrl, ...paths) =>
     [
         baseUrl.replace(/\/$/, ''),
         ...paths
-            .map(path => path.replaceAll(/^\/|\/$/g, ''))
+            .map(path => path?.replaceAll(/^\/|\/$/g, ''))
             .filter(path => path) ].join('/')
 
 const isURL = target => {
