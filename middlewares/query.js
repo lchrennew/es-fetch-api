@@ -2,7 +2,7 @@ export const query = (params, options) => {
     const { append = false, includeUndefined = false, includeNull = false } = options ?? {}
     const appendValue = (ctx, name, value) => {
         if (value === undefined && !includeUndefined) return
-        if (value === null && includeNull) return
+        if (value === null && !includeNull) return
         ctx.url.searchParams.append(name, value)
     }
     return (ctx, next) => {
