@@ -85,9 +85,11 @@ export class WebApiContext {
     }
 
     header(key, value) {
-        if (value === undefined)
-            return { ...this.headers }[key];
-        this.headers = { ...this.headers, [key]: value };
+        if (value === undefined) {
+            if (key instanceof Object) this.headers = { ...this.headers, ...key }
+            else return { ...this.headers }[key];
+        } else
+            this.headers = { ...this.headers, [key]: value };
         return this
     }
 
