@@ -80,8 +80,24 @@ export class WebApiContext {
     cache = caches.default;
     referrer = referrers.client;
 
+    #webApi
+    #endpoint
+
     constructor(webApi, endpoint) {
-        this.url = new URL(isURL(endpoint) ? endpoint : joinUrl(webApi, endpoint))
+        this.#webApi = webApi
+        this.#endpoint = endpoint
+    }
+
+    async #getURL() {
+        return new URL(
+            isURL(this.#endpoint)
+                ? this.#endpoint
+                : joinUrl(
+                    this.#webApi instanceof Function
+                        ? await this.#webApi()
+                        : this.#webApi
+                )
+        )
     }
 
     header(key, value) {
@@ -94,7 +110,7 @@ export class WebApiContext {
     }
 
     async commit() {
-        this.response = await globalFetch(this.url, this);
+        this.response = await globalFetch(await this.#getURL(), this);
         this.response.context = this
         return this.response
     }
