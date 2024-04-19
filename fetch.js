@@ -80,24 +80,8 @@ export class WebApiContext {
     cache = caches.default;
     referrer = referrers.client;
 
-    #webApi
-    #endpoint
-
     constructor(webApi, endpoint) {
-        this.#webApi = webApi
-        this.#endpoint = endpoint
-    }
-
-    async #getURL() {
-        return new URL(
-            isURL(this.#endpoint)
-                ? this.#endpoint
-                : joinUrl(
-                    this.#webApi instanceof Function
-                        ? await this.#webApi()
-                        : this.#webApi
-                )
-        )
+        this.url = isURL(endpoint) ? endpoint : joinUrl(webApi, endpoint)
     }
 
     header(key, value) {
@@ -118,6 +102,7 @@ export class WebApiContext {
 
 export const getApi = webApi => async (...args) => {
     const endpoint = typeof args[0] === 'string' ? args.shift() : undefined
+    if (webApi instanceof Function) webApi = await webApi()
     const ctx = new WebApiContext(webApi, endpoint);
     const middlewares = [ ...args ].flat();
     const next = () => {
