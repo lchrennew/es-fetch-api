@@ -46,7 +46,7 @@ import axios from 'axios'
 const apiV1 = axios.create({ baseURL: 'http://yourdomain.com/api/v1' })
 
 // unneccessarily indicate that `/user` means url
-const getUser = async id => await apiV1.get({ url: `/user`, params: { id } })
+const getUser = id => apiV1.get({ url: `/user`, params: { id } })
 
 const response = await getUser(12345)
 ```
@@ -60,7 +60,7 @@ import { query } from 'es-fetch-api/middelwares/query.js'
 // without mincing words
 const apiV1 = getApi('http://yourdomain.com/api/v1')
 
-const getUser = async id => await apiV1(`user`, query({ id }))
+const getUser = id => apiV1(`user`, query({ id }))
 
 const response = await getUser(12345)
 ```
@@ -84,7 +84,7 @@ import axios from 'axios'
 const apiV1 = axios.create({ baseURL: 'http://yourdomain.com/api/v1' })
 
 // which format is used to post data?
-const createUser = async user => await apiV1.post(`/user`, user)
+const createUser = user => apiV1.post(`/user`, user)
 
 const resposne = await createUser({
     firstName: 'Chun',
@@ -102,7 +102,7 @@ import { POST } from 'es-fetch-api/middelwares/methods.js'
 const apiV1 = getApi('http://yourdomain.com/api/v1')
 
 // read what you see infomation losslessly 
-const createUser = async user => await apiV1(`user`, POST, json(user))
+const createUser = user => apiV1(`user`, POST, json(user))
 
 const resposne = await createUser({
     firstName: 'Chun',
@@ -159,17 +159,17 @@ import { getToken } from 'token-helper'
 // read what you see
 const useToken = async (ctx, next) => {
     ctx.header('Authorization', `Token ${await getToken()}`)
-    return await next()
+    return next()
 }
-const useTimestamp = async (ctx, next) => {
+const useTimestamp = (ctx, next) => {
     ctx.header('X-Timestamp', Date.now())
-    return await next()
+    return next()
 }
 
 const apiV1 = getApi('http://yourdomain.com/api/v1')
 
 // read what you see infomation-losslessly 
-const createUser = async user => await apiV1(`user`, POST, json(user), useToken, useTimestamp)
+const createUser = user => apiV1(`user`, POST, json(user), useToken, useTimestamp)
 
 const resposne = await createUser({
     firstName: 'Chun',
@@ -186,16 +186,16 @@ import axios from 'axios'
 import { getToken } from 'token-helper'
 
 const useToken = async () => ({ 'Authorization': `Token ${await getToken()}` })
-const useTimestamp = async () => ({ 'X-Timestamp': Date.now() })
+const useTimestamp = () => ({ 'X-Timestamp': Date.now() })
 
 // headers is static, especially the X-Timestamp. Easy to maintain? No!
 const apiV1 = axios.create({
     baseURL: 'http://yourdomain.com/api/v1',
-    headers: { ...await useToken(), ...await useTimestamp() }
+    headers: { ...await useToken(), ...useTimestamp() }
 })
 
-const createUser = async user => await apiV1.post({ url: `/user`, data: user, })
-const getUser = async id => await apiV1.get({ url: `/user`, params: { id } })
+const createUser = user => apiV1.post({ url: `/user`, data: user, })
+const getUser = id => apiV1.get({ url: `/user`, params: { id } })
 
 ```
 
@@ -209,11 +209,11 @@ import { getToken } from 'token-helper'
 
 const useToken = async (ctx, next) => {
     ctx.header('Authorization', `Token ${await getToken()}`)
-    return await next()
+    return next()
 }
-const useTimestamp = async (ctx, next) => {
+const useTimestamp = (ctx, next) => {
     ctx.header('X-Timestamp', Date.now())
-    return await next()
+    return next()
 }
 
 // Just append the middlewares, so easy.
@@ -328,7 +328,7 @@ const getOne = async (...args) => {
 
 // getOne is the unified way to process every response. You could also write other logics such as getList
 // read what you see
-const getUser = async id => getOne(`user`, query({ id }))
+const getUser = id => getOne(`user`, query({ id }))
 ```
 
 ### One word reason

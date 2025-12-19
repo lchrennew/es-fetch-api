@@ -42,7 +42,7 @@ import axios from 'axios'
 const apiV1 = axios.create({ baseURL: 'http://yourdomain.com/api/v1' })
 
 // 没必要声明`/user`的意思是URL
-const getUser = async id => await apiV1.get({ url: `/user`, params: { id } })
+const getUser = id => apiV1.get({ url: `/user`, params: { id } })
 
 const response = await getUser(12345)
 ```
@@ -55,7 +55,7 @@ import { getApi, query } from "es-fetch-api";
 // 言简意赅
 const apiV1 = getApi('http://yourdomain.com/api/v1')
 
-const getUser = async id => await apiV1(`user`, query({ id }))
+const getUser = id => apiV1(`user`, query({ id }))
 
 const response = await getUser(12345)
 ```
@@ -82,7 +82,7 @@ import axios from 'axios'
 const apiV1 = axios.create({ baseURL: 'http://yourdomain.com/api/v1' })
 
 // post数据用啥数据格式呢？
-const createUser = async user => await apiV1.post(`/user`, user)
+const createUser = user => apiV1.post(`/user`, user)
 
 const resposne = await createUser({
     firstName: 'Chun',
@@ -98,7 +98,7 @@ import { getApi, json, POST } from "es-fetch-api";
 const apiV1 = getApi('http://yourdomain.com/api/v1')
 
 // 看见啥说啥，而且信息没保留 
-const createUser = async user => await apiV1(`user`, POST, json(user))
+const createUser = user => apiV1(`user`, POST, json(user))
 
 const resposne = await createUser({
     firstName: 'Chun',
@@ -127,15 +127,15 @@ import { getToken } from 'token-helper'
 
 // 容易读懂吗？几乎没办法确定这两个函数返回的是请求头
 const useToken = async () => ({ 'Authorization': `Token ${await getToken()}` })
-const useTimestamp = async () => ({ 'X-Timestamp': Date.now() })
+const useTimestamp = () => ({ 'X-Timestamp': Date.now() })
 
 const apiV1 = axios.create({ baseURL: 'http://yourdomain.com/api/v1' })
 
 // 容易读懂吗？可能不同的人看法就不一样了，但无论如何，这么写代码太啰哩啰嗦了，咋维护啊？
-const createUser = async user => await apiV1.post({
+const createUser = async user => apiV1.post({
     url: `/user`,
     data: user,
-    headers: { ...await useToken(), ...await useTimestamp() }
+    headers: { ...await useToken(), ...useTimestamp() }
 })
 
 const resposne = await createUser({
@@ -153,17 +153,17 @@ import { getToken } from 'token-helper'
 // 所见即所读
 const useToken = async (ctx, next) => {
     ctx.header('Authorization', `Token ${await getToken()}`)
-    return await next()
+    return next()
 }
-const useTimestamp = async (ctx, next) => {
+const useTimestamp = (ctx, next) => {
     ctx.header('X-Timestamp', Date.now())
-    return await next()
+    return next()
 }
 
 const apiV1 = getApi('http://yourdomain.com/api/v1')
 
 // 看见啥读啥，信息不走样 
-const createUser = async user => await apiV1(`user`, POST, json(user), useToken, useTimestamp)
+const createUser = user => apiV1(`user`, POST, json(user), useToken, useTimestamp)
 
 const resposne = await createUser({
     firstName: 'Chun',
@@ -180,16 +180,16 @@ import axios from 'axios'
 import { getToken } from 'token-helper'
 
 const useToken = async () => ({ 'Authorization': `Token ${await getToken()}` })
-const useTimestamp = async () => ({ 'X-Timestamp': Date.now() })
+const useTimestamp = () => ({ 'X-Timestamp': Date.now() })
 
 // headers是静态的，尤其是X-Timestamp，说好的每个请求时间戳不一样呢？容易维护吗？显然不容易！
 const apiV1 = axios.create({
     baseURL: 'http://yourdomain.com/api/v1',
-    headers: { ...await useToken(), ...await useTimestamp() }
+    headers: { ...await useToken(), ...useTimestamp() }
 })
 
-const createUser = async user => await apiV1.post({ url: `/user`, data: user, })
-const getUser = async id => await apiV1.get({ url: `/user`, params: { id } })
+const createUser = user => apiV1.post({ url: `/user`, data: user, })
+const getUser = id => apiV1.get({ url: `/user`, params: { id } })
 
 ```
 
@@ -201,17 +201,17 @@ import { getToken } from 'token-helper'
 
 const useToken = async (ctx, next) => {
     ctx.header('Authorization', `Token ${await getToken()}`)
-    return await next()
+    return next()
 }
 const useTimestamp = async (ctx, next) => {
     ctx.header('X-Timestamp', Date.now())
-    return await next()
+    return next()
 }
 
 // 只要追加中间件到参数列表就可以啦！就这个feel倍儿爽！
 const apiV1 = (...args) => getApi('http://yourdomain.com/api/v1')(...args, useToken, useTimestamp)
 
-const createUser = async user => await apiV1(`user`, POST, json(user))
+const createUser = user => apiV1(`user`, POST, json(user))
 ```
 
 #### 5. 处理响应
@@ -316,7 +316,7 @@ const getOne = async (...args) => {
 
 // getOne可以统一处理每个响应。你还可以封装其他逻辑，比如getList
 // 看着啥读啥
-const getUser = async id => getOne(`user`, query({ id }))
+const getUser = id => getOne(`user`, query({ id }))
 ```
 
 ### 一句话理由

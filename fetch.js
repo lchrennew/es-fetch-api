@@ -81,7 +81,7 @@ export class WebApiContext {
     referrer = referrers.client;
 
     constructor(webApi, endpoint) {
-        this.url = isURL(endpoint) ? endpoint : joinUrl(webApi, endpoint)
+        this.url = new URL(isURL(endpoint) ? endpoint : joinUrl(webApi, endpoint))
     }
 
     header(key, value) {
@@ -94,7 +94,7 @@ export class WebApiContext {
     }
 
     async commit() {
-        this.response = await globalFetch(await this.#getURL(), this);
+        this.response = await globalFetch(this.url, this);
         this.response.context = this
         return this.response
     }
