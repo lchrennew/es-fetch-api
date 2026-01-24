@@ -17,8 +17,15 @@ Very very very powerful, extensible http client for both node.js and browser.
 
 This project provides built-in skills for AI agents (like Trae, Cursor, etc.) to understand and write code using `es-fetch-api`.
 
-- [AI Skills Guide](./skills/README.md)
-- [Skills JSON Definition](./skills/skills.json)
+- [AI Skills Guide](./skills/es-fetch-api.md)
+
+### Installation
+
+Run the following command in your project root to install the AI skills to `.ai/skills` and `.agent/skills`:
+
+```bash
+npx add-skill lchrennew/es-fetch-api
+```
 
 ## Why should you use ES-Fetch API?
 

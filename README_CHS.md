@@ -14,8 +14,15 @@
 
 本项目为 AI Agent（如 Trae, Cursor 等）提供了内置的 Skills 支持，帮助 AI 理解并编写基于 `es-fetch-api` 的代码。
 
-- [AI Skills 使用指南](./skills/README.md)
-- [Skills JSON 定义](./skills/skills.json)
+- [AI Skills 使用指南](./skills/es-fetch-api.md)
+
+### 安装 Skills
+
+在项目根目录下运行以下命令，将 AI Skills 安装到 `.ai/skills` 和 `.agent/skills` 目录：
+
+```bash
+npx add-skill lchrennew/es-fetch-api
+```
 
 ## 为啥要用ES-Fetch-API?
 
