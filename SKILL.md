@@ -121,6 +121,72 @@ await api('/long-task', abortable(controller));
 
 ## Best Practices
 
+### 1. Use Unified Base URL Handling
+
+Avoid passing absolute URLs for every request. Instead, define a helper to retrieve the base URL dynamically.
+
+```javascript
+export const getBaseUrl = () => window.appSettings?.api.backend ?? import.meta.env.VITE_APP_API
+```
+
+### 2. Use a Unified API Invocation Method
+
+Avoid calling `getApi` in every function. Create a centralized `invokeApi` function.
+
+```javascript
+export const invokeApi = (...args) => {
+    const api = getApi(getBaseUrl())
+    return api(...args, useToken()); // Automatically inject token if needed
+}
+```
+
+### 3. Centralize Response Handling
+
+Create helper functions like `getData` and `getText` to handle response parsing centrally, rather than repeating `response.json()` or `response.text()` in every call.
+
+```javascript
+export const getData = async (...args) => {
+    const response = await invokeApi(...args)
+    return response?.json()
+}
+
+export const getText = async (...args) => {
+    const response = await invokeApi(...args)
+    return response.text()
+}
+```
+
+### 4. Unified Authentication Handling
+
+Use middleware for authentication instead of manually adding headers in every request.
+
+```javascript
+export const requireToken = () => async (ctx, next) => {
+    const token = await getToken() // your token retrieval logic
+    if (!token) return
+    
+    // Header middleware or manual header setting can be done here if not handled by `useToken` logic above
+    // Or simply ensure `useToken` middleware is part of the chain as shown in invokeApi
+    return next()
+}
+
+// Example usage in invokeApi:
+export const invokeApi = (...args) => {
+    const api = getApi(getBaseUrl())
+    return api(...args, requireToken());
+}
+```
+
+### 5. Use Arrow Functions for Business Logic
+
+Prefer concise arrow functions (lambdas) for defining business logic API methods.
+
+```javascript
+export const getExpenseTypes = (companyId) => 
+    getData('expense-types', query({ companyId }));
+```
+
+### Other Tips
 - Always use the provided middlewares (`json`, `query`, etc.) instead of manually constructing bodies or query strings.
 - Import only the middlewares you need to keep the bundle size small.
-- Use `getApi` to create a reusable client instance for your API's base URL.
+

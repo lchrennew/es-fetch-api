@@ -14,7 +14,7 @@
 
 本项目为 AI Agent（如 Trae, Cursor 等）提供了内置的 Skills 支持，帮助 AI 理解并编写基于 `es-fetch-api` 的代码。
 
-- [AI Skills 使用指南](./skills/es-fetch-api.md)
+- [AI Skills 使用指南](./SKILL.md)
 
 ### 安装 Skills
 

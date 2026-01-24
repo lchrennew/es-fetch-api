@@ -17,7 +17,7 @@ Very very very powerful, extensible http client for both node.js and browser.
 
 This project provides built-in skills for AI agents (like Trae, Cursor, etc.) to understand and write code using `es-fetch-api`.
 
-- [AI Skills Guide](./skills/es-fetch-api.md)
+- [AI Skills Guide](./SKILL.md)
 
 ### Installation
 
