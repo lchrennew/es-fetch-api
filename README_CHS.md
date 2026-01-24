@@ -10,6 +10,13 @@
 ![GitHub issues](https://img.shields.io/github/issues-raw/lchrennew/es-fetch-api)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/lchrennew/es-fetch-api)
 
+## AI Agent 支持
+
+本项目为 AI Agent（如 Trae, Cursor 等）提供了内置的 Skills 支持，帮助 AI 理解并编写基于 `es-fetch-api` 的代码。
+
+- [AI Skills 使用指南](./skills/README.md)
+- [Skills JSON 定义](./skills/skills.json)
+
 ## 为啥要用ES-Fetch-API?
 
 还在用`axios`? `ES-Fetch-API`让你的世界更晴朗。

@@ -13,6 +13,13 @@ Very very very powerful, extensible http client for both node.js and browser.
 [![codebeat badge](https://codebeat.co/badges/8987f803-3d78-4959-89bd-6a374f7f3472)](https://codebeat.co/projects/github-com-lchrennew-es-fetch-api-main)
 [![CodeQL](https://github.com/lchrennew/es-fetch-api/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/lchrennew/es-fetch-api/actions/workflows/codeql-analysis.yml)
 
+## AI Agent Support
+
+This project provides built-in skills for AI agents (like Trae, Cursor, etc.) to understand and write code using `es-fetch-api`.
+
+- [AI Skills Guide](./skills/README.md)
+- [Skills JSON Definition](./skills/skills.json)
+
 ## Why should you use ES-Fetch API?
 
 Still using `axios`? `ES-Fetch-API` creates sunny world for you.
