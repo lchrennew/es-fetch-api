@@ -1,6 +1,6 @@
 ---
 name: es-fetch-api
-description: Guide for installing and using the es-fetch-api library to make HTTP requests.
+description: Use this skill when the user's input contains keywords like "es-fetch-api", "fetch wrapper", "http client", "api request", "/use fetch" or when they need to make HTTP requests in a JavaScript/TypeScript project. This skill provides installation guides, usage examples, and best practices.
 ---
 
 # es-fetch-api
