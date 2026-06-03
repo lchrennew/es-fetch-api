@@ -4,9 +4,6 @@
 // ver: 1.0.1 - node-es
 // https://fetch.spec.whatwg.org/#dom-request-method
 
-let globalFetch
-if (typeof fetch === 'function') globalFetch = fetch
-export const use = fetch => globalFetch = fetch
 
 export const credentials = {
     omit: 'omit',
@@ -60,7 +57,7 @@ const joinUrl = (baseUrl, ...paths) =>
         baseUrl.replace(/\/$/, ''),
         ...paths
             .map(path => path?.replaceAll(/^\/|\/$/g, ''))
-            .filter(path => path) ].join('/')
+            .filter(path => path)].join('/')
 
 const isURL = target => {
     try {
@@ -94,7 +91,7 @@ export class WebApiContext {
     }
 
     async commit() {
-        this.response = await globalFetch(this.url, this);
+        this.response = await fetch(this.url, this);
         this.response.context = this
         return this.response
     }
@@ -104,7 +101,7 @@ export const getApi = webApi => async (...args) => {
     const endpoint = typeof args[0] === 'string' ? args.shift() : undefined
     if (webApi instanceof Function) webApi = await webApi()
     const ctx = new WebApiContext(webApi, endpoint);
-    const middlewares = [ ...args ].flat();
+    const middlewares = [...args].flat();
     const next = () => {
         const middleware = middlewares.shift();
         if (!middleware) return ctx.commit()
@@ -113,4 +110,5 @@ export const getApi = webApi => async (...args) => {
     return next()
 };
 
+export * from './middlewares/index.js'
 

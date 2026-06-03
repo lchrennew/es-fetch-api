@@ -2,7 +2,7 @@
 
 [中文](./README_CHS.md)  | English
 
-Very very very powerful, extensible http client for both node.js and browser.
+Very powerful and extensible HTTP client for modern JavaScript runtimes with Fetch API support.
 
 ![NPM](https://img.shields.io/npm/l/es-fetch-api)
 ![npm](https://img.shields.io/npm/v/es-fetch-api)
@@ -27,19 +27,19 @@ Run the following command in your project root to install the AI skills to `.ai/
 npx add-skill lchrennew/es-fetch-api
 ```
 
-## Why should you use ES-Fetch API?
+## Why use ES-Fetch-API?
 
-Still using `axios`? `ES-Fetch-API` creates sunny world for you.
+Still using `axios`? `ES-Fetch-API` keeps your code lighter and easier to read.
 
-### i. It's extremely light-weight and built on the native fetch API.
+### i. It is extremely lightweight and built on the native Fetch API
 
-Comparing to axios which is ~400kB, `es-fetch-api` is just ~6kB. Because es-fetch-api is designed for native fetch API
-compatible environments.
+Compared to axios at roughly 400kB, `es-fetch-api` is only about 6kB of source code because it is designed for
+modern JavaScript runtimes that already support the native Fetch API.
 
 References:
 
-1. [fetch API on MDN](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#browser_compatibility)
-2. [fetch API on whatwg.org](https://fetch.spec.whatwg.org/)
+1. [Fetch API on MDN](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
+2. [Fetch API on WHATWG](https://fetch.spec.whatwg.org/)
 
 ### ii. Enables maximized readability, extensibility, maintainability and minimized complexity.
 
@@ -56,10 +56,10 @@ Using axios:
 ```javascript
 import axios from 'axios'
 
-// unneccessarily indicate that 'http://yourdomain.com/api/v1' means baseURL
+// no need to explain that 'http://yourdomain.com/api/v1' is the base URL
 const apiV1 = axios.create({ baseURL: 'http://yourdomain.com/api/v1' })
 
-// unneccessarily indicate that `/user` means url
+// no need to explain that `/user` is the URL
 const getUser = id => apiV1.get({ url: `/user`, params: { id } })
 
 const response = await getUser(12345)
@@ -68,8 +68,7 @@ const response = await getUser(12345)
 Using es-fetch-api, great readability:
 
 ```javascript
-import { getApi } from "es-fetch-api";
-import { query } from 'es-fetch-api/middelwares/query.js'
+import { getApi, query } from "es-fetch-api";
 
 // without mincing words
 const apiV1 = getApi('http://yourdomain.com/api/v1')
@@ -100,7 +99,7 @@ const apiV1 = axios.create({ baseURL: 'http://yourdomain.com/api/v1' })
 // which format is used to post data?
 const createUser = user => apiV1.post(`/user`, user)
 
-const resposne = await createUser({
+const response = await createUser({
     firstName: 'Chun',
     lastName: 'Li'
 })
@@ -109,16 +108,14 @@ const resposne = await createUser({
 Using es-fetch-api, better readability:
 
 ```javascript
-import { getApi } from "es-fetch-api";
-import { json } from 'es-fetch-api/middelwares/body.js'
-import { POST } from 'es-fetch-api/middelwares/methods.js'
+import { getApi, json, POST } from "es-fetch-api";
 
 const apiV1 = getApi('http://yourdomain.com/api/v1')
 
-// read what you see infomation losslessly 
+// read exactly what you see
 const createUser = user => apiV1(`user`, POST, json(user))
 
-const resposne = await createUser({
+const response = await createUser({
     firstName: 'Chun',
     lastName: 'Li'
 })
@@ -131,7 +128,7 @@ Expected request:
 ```
 POST http://yourdomain.com/api/v1/user/
 Content-Type: application/json
-Auhorization: Token ********
+Authorization: Token ********
 X-Timestamp: ##########
 
 {"firstName":"Fred","lastName":"Flintstone"}
@@ -143,20 +140,20 @@ Using axios:
 import axios from 'axios'
 import { getToken } from 'token-helper'
 
-// easy to read? it's hard to understand they return headers.
+// easy to read? It is hard to tell that these functions return headers.
 const useToken = async () => ({ 'Authorization': `Token ${await getToken()}` })
 const useTimestamp = async () => ({ 'X-Timestamp': Date.now() })
 
 const apiV1 = axios.create({ baseURL: 'http://yourdomain.com/api/v1' })
 
-// easy to read? Maybe or not, but too long winded to maintain.
+// easy to read? Maybe, but it is still too long-winded to maintain.
 const createUser = async user => await apiV1.post({
     url: `/user`,
     data: user,
     headers: { ...await useToken(), ...await useTimestamp() }
 })
 
-const resposne = await createUser({
+const response = await createUser({
     firstName: 'Chun',
     lastName: 'Li'
 })
@@ -165,9 +162,7 @@ const resposne = await createUser({
 Using es-fetch-api, better readability, better maintainability:
 
 ```javascript
-import { getApi } from "es-fetch-api";
-import { json } from 'es-fetch-api/middelwares/body.js'
-import { POST } from 'es-fetch-api/middelwares/methods.js'
+import { getApi, json, POST } from "es-fetch-api";
 import { getToken } from 'token-helper'
 
 // read what you see
@@ -182,16 +177,16 @@ const useTimestamp = (ctx, next) => {
 
 const apiV1 = getApi('http://yourdomain.com/api/v1')
 
-// read what you see infomation-losslessly 
+// read exactly what you see
 const createUser = user => apiV1(`user`, POST, json(user), useToken, useTimestamp)
 
-const resposne = await createUser({
+const response = await createUser({
     firstName: 'Chun',
     lastName: 'Li'
 })
 ```
 
-#### 4. To use custom middlewares for every invocation.
+#### 4. Use custom middlewares for every invocation
 
 Using axios:
 
@@ -202,7 +197,7 @@ import { getToken } from 'token-helper'
 const useToken = async () => ({ 'Authorization': `Token ${await getToken()}` })
 const useTimestamp = () => ({ 'X-Timestamp': Date.now() })
 
-// headers is static, especially the X-Timestamp. Easy to maintain? No!
+// the headers are static here, especially X-Timestamp. Easy to maintain? No.
 const apiV1 = axios.create({
     baseURL: 'http://yourdomain.com/api/v1',
     headers: { ...await useToken(), ...useTimestamp() }
@@ -216,9 +211,7 @@ const getUser = id => apiV1.get({ url: `/user`, params: { id } })
 Using es-fetch-api, better readability, better maintainability:
 
 ```javascript
-import { getApi } from "es-fetch-api";
-import { json } from 'es-fetch-api/middelwares/body.js'
-import { POST } from 'es-fetch-api/middelwares/methods.js'
+import { getApi, json, POST } from "es-fetch-api";
 import { getToken } from 'token-helper'
 
 const useToken = async (ctx, next) => {
@@ -236,7 +229,7 @@ const apiV1 = (...args) => getApi('http://yourdomain.com/api/v1')(...args, useTo
 const createUser = async user => await apiV1(`user`, POST, json(user))
 ```
 
-#### 5. Process response.
+#### 5. Process responses
 
 For instance with the getUser function.
 
@@ -248,7 +241,7 @@ Content-Type: application/json
 Body: {ok: true, data: {"firstName": "Chun", "lastName": "Li"}}
 ```
 
-When the user doesn't exist, the resposne should be:
+When the user does not exist, the response should be:
 
 ```text
 Status: 404 NotFound
@@ -266,11 +259,11 @@ const getUser = async id => {
     try {
         const response = await apiV1.get({ url: `/user`, params: { id } })
         console.log(response.status, response.statusText)
-        // So many data and error, make me confused...don't forget write the .data after the response :)
+        // response.data and error.response.data are easy to mix up
         const { data } = response.data
         return data
     } catch (error) {
-        // which error is the error i want to use?
+        // which error object should I use here?
         console.log(error.response.data.message ?? error.message)
     }
 }
@@ -279,8 +272,7 @@ const getUser = async id => {
 Using es-fetch-api, great readability:
 
 ```javascript
-import { getApi } from "es-fetch-api";
-import { query } from 'es-fetch-api/middelwares/query.js'
+import { getApi, query } from "es-fetch-api";
 
 const apiV1 = getApi('http://yourdomain.com/api/v1')
 
@@ -310,7 +302,7 @@ const apiV1 = axios.create({ baseURL: 'http://yourdomain.com/api/v1' })
 
 const getOne = async config => {
     try {
-        const resposne = await apiV1(config)
+        const response = await apiV1(config)
         console.log(response.status, response.statusText)
         const { ok, data, message } = response.data
         return data
@@ -323,14 +315,13 @@ const getOne = async config => {
 Using es-fetch-api, great readability:
 
 ```javascript
-import { getApi } from "es-fetch-api";
-import { query } from 'es-fetch-api/middelwares/query.js'
+import { getApi, query } from "es-fetch-api";
 
 const apiV1 = getApi('http://yourdomain.com/api/v1')
 
 const getOne = async (...args) => {
     try {
-        const resposne = await apiV1(...args, useToken) // you can append custom middlewares here.
+        const response = await apiV1(...args, useToken) // you can append custom middlewares here
         console.log(response.status, response.statusText)
         const { ok, data, message } = await response.json() // read what you see
         if (!ok) throw { message }  // throw the error as you will
@@ -340,26 +331,27 @@ const getOne = async (...args) => {
     }
 }
 
-// getOne is the unified way to process every response. You could also write other logics such as getList
+// getOne can process every response in a unified way. You can also build helpers such as getList
 // read what you see
 const getUser = id => getOne(`user`, query({ id }))
 ```
 
 ### One word reason
 
-In es-fetch-api, each api invocation is a middlewares-chain, which means everything is extensible without introducing
-more complexity, no matter you want to process request and response in any unified way or case by case.
+In `es-fetch-api`, every API invocation is a middleware chain. That makes the whole flow extensible without adding
+extra complexity, whether you want to handle requests and responses case by case or in a unified way.
 
 ## Built-in middlewares
 
+Built-in middlewares are now exported from both `es-fetch-api` and `es-fetch-api/middlewares`, and the examples below use the package root as the default import entry.
+
 ### `method` middleware
 
-This middleware is used to set HTTP method, it accepts a string parameter for method name to use. If an unsupported
-method name is used, an exception will be thrown.
+This middleware sets the HTTP method. It accepts a string parameter for the method name. If an unsupported method name
+is used, an exception will be thrown.
 
 ```javascript
-import { getApi } from "es-fetch-api";
-import { method } from 'es-fetch-api/middelwares/methods.js'
+import { getApi, method } from "es-fetch-api";
 
 const api = getApi('http://mydomain.com/api')
 
@@ -371,8 +363,7 @@ const response = api('/', method('DELETE'))
 `GET`, `POST`, `PUT`, `PATCH` and `DELETE`, these are shorthands for each corresponding `method`.
 
 ```javascript
-import { getApi } from "es-fetch-api";
-import { DELETE } from 'es-fetch-api/middelwares/methods.js'
+import { getApi, DELETE } from "es-fetch-api";
 
 const api = getApi('http://mydomain.com/api')
 
@@ -381,16 +372,14 @@ const response = api('/', DELETE)
 
 ### `json` middleware
 
-This middleware is used to declare the HTTP request body is an JSON object.
+This middleware declares that the HTTP request body is a JSON object.
 
-It accepts an Object parameter to pass the body object in.
+It accepts an `Object` parameter as the request body.
 
 When you use this middleware, the `Content-Type: application/json` header will be set automatically.
 
 ```javascript
-import { getApi } from "es-fetch-api";
-import { json } from 'es-fetch-api/middelwares/body.js'
-import { POST } from 'es-fetch-api/middelwares/methods.js'
+import { getApi, json, POST } from "es-fetch-api";
 
 const api = getApi('http://mydomain.com/api')
 
@@ -399,18 +388,17 @@ const response = api('/', POST, json({ hello, world }))
 
 ### `query` middleware
 
-This middleware is used to declare the query string parameters of the request URL.
+This middleware declares the query string parameters of the request URL.
 
 It accepts two parameters.
 
-1. an Object, whose keys are the query parameter names and their corresponding value(s) are the query parameter values.
-   If a value is an array with more than one element, then it will be an multi-value parameter.
-2. a Boolean, used to indicate whether each query parameter value should be appended to existed values. By Default,
-   it's `false`.
+1. an `Object`, whose keys are query parameter names and whose values are the corresponding query parameter values.
+   If a value is an array with more than one element, it becomes a multi-value parameter.
+2. a `Boolean`, used to indicate whether each query parameter value should be appended to existing values. By default,
+   it is `false`.
 
 ```javascript
-import { getApi } from "es-fetch-api";
-import { query } from 'es-fetch-api/middelwares/query.js'
+import { getApi, query } from "es-fetch-api";
 
 const api = getApi('http://mydomain.com/api?hello=1')
 
@@ -421,15 +409,14 @@ api(query({ hello: [ 'Bing', 'Dwen', 'Dwen' ], world: '2022' })) // http://mydom
 
 ### `form` middleware
 
-This middleware is used to declare the HTTP request body is form data.
+This middleware declares that the HTTP request body is form data.
 
-It accepts an Object parameter to pass form data in.
+It accepts an `Object` parameter as the form data.
 
 When you use this middleware, the `Content-Type: application/x-www-form-urlencoded` header will be set automatically.
 
 ```javascript
-import { getApi } from "es-fetch-api";
-import { form } from 'es-fetch-api/middelwares/body.js'
+import { getApi, form, POST } from "es-fetch-api";
 
 const api = getApi('http://mydomain.com/api')
 
@@ -438,13 +425,13 @@ api(POST, form({ hello: 'world' })) // hello=world
 
 ### `file` middleware
 
-This middleware is used to declare the HTTP request is uploading files.
+This middleware declares that the HTTP request uploads files.
 
 It accepts three parameters:
 
-1. the name of FormData field contains the file
+1. the name of the `FormData` field that contains the file
 2. a `File` object
-3. give a filename, by default it's the original filename
+3. an optional filename, which defaults to the original filename
 
 ### `abortable` middleware
 
@@ -455,8 +442,7 @@ You can use it to implement manual abort, timeout abort and so on.
 When the AbortController::abort() is invoked, an exception will be thrown.
 
 ```javascript
-import { getApi } from "es-fetch-api";
-import { abortable } from 'es-fetch-api/middelwares/abortable.js'
+import { getApi, abortable } from "es-fetch-api";
 
 const api = getApi('http://mydomain.com/api')
 const controller = new AbortController()
@@ -466,7 +452,7 @@ api(abortable(controller))
 
 ## Middleware development
 
-Each middleware follow the same signature (`Function` and `AsyncFunction` both OK) and finally `return next()`.
+Each middleware follows the same signature (`Function` and `AsyncFunction` are both fine) and finally returns `next()`.
 
 ```javascript
 const example = (ctx, next) => {
@@ -486,8 +472,8 @@ const example = async (ctx, next) => {
 
 ### More about the `ctx`
 
-The `ctx` is completely same as the [Request](https://fetch.spec.whatwg.org/#request-class), except the `ctx`
-exposes a helper method used to set request headers, see `useToken` middleware example in this document.
+`ctx` is almost the same as a [Request](https://fetch.spec.whatwg.org/#request-class), except that it exposes a helper
+method for setting request headers. See the `useToken` middleware example in this document.
 
 ## License
 

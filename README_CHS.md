@@ -1,7 +1,7 @@
 # ES-Fetch-API
 中文  |  [English](./README.md)
 
-特别特别特别强大而且可扩展的HTTP客户端，node.js和浏览器都能用！
+特别强大而且可扩展的 HTTP 客户端，适用于所有支持 Fetch API 的现代 JavaScript 运行时！
 
 ![NPM](https://img.shields.io/npm/l/es-fetch-api)
 ![npm](https://img.shields.io/npm/v/es-fetch-api)
@@ -24,18 +24,18 @@
 npx add-skill lchrennew/es-fetch-api
 ```
 
-## 为啥要用ES-Fetch-API?
+## 为什么要用 ES-Fetch-API？
 
-还在用`axios`? `ES-Fetch-API`让你的世界更晴朗。
+还在用 `axios`？`ES-Fetch-API` 让代码更轻、更清晰。
 
-### i. 超级轻量化，基于原生的fetch API打造
+### i. 超级轻量，基于原生 Fetch API 打造
 
-axios大约400kB，相比之下，`es-fetch-api`只有约6kB（源码）。这是因为，es-fetch-api专门为支持原生fetch API的环境而创建。
+`axios` 大约 400kB，相比之下，`es-fetch-api` 源码只有约 6kB。这是因为它专门为支持原生 Fetch API 的现代 JavaScript 运行时而设计。
 
 参考：
 
-1. [MDN上的fetch API文档](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#browser_compatibility)
-2. [whatwg.org上的fetch API文档](https://fetch.spec.whatwg.org/)
+1. [MDN 上的 Fetch API 文档](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
+2. [WHATWG 上的 Fetch API 文档](https://fetch.spec.whatwg.org/)
 
 ### ii. 让最强可读性、可扩展性、可维护性以及最低复杂性成为可能
 
@@ -47,7 +47,7 @@ axios大约400kB，相比之下，`es-fetch-api`只有约6kB（源码）。这�
 GET http://yourdomain.com/api/v1/user?id=12345
 ```
 
-用axios实现:
+用 axios 实现：
 
 ```javascript
 import axios from 'axios'
@@ -61,7 +61,7 @@ const getUser = id => apiV1.get({ url: `/user`, params: { id } })
 const response = await getUser(12345)
 ```
 
-用es-fetch-api，得到了棒棒的可读性：
+用 `es-fetch-api` 实现，可读性更好：
 
 ```javascript
 import { getApi, query } from "es-fetch-api";
@@ -95,39 +95,39 @@ import axios from 'axios'
 
 const apiV1 = axios.create({ baseURL: 'http://yourdomain.com/api/v1' })
 
-// post数据用啥数据格式呢？
+// POST 数据该用什么格式呢？
 const createUser = user => apiV1.post(`/user`, user)
 
-const resposne = await createUser({
+const response = await createUser({
     firstName: 'Chun',
     lastName: 'Li'
 })
 ```
 
-使用es-fetch-api来获得更好的可读性：
+使用 `es-fetch-api` 来获得更好的可读性：
 
 ```javascript
 import { getApi, json, POST } from "es-fetch-api";
 
 const apiV1 = getApi('http://yourdomain.com/api/v1')
 
-// 看见啥说啥，而且信息没保留 
+// 看见什么写什么，而且信息不失真
 const createUser = user => apiV1(`user`, POST, json(user))
 
-const resposne = await createUser({
+const response = await createUser({
     firstName: 'Chun',
     lastName: 'Li'
 })
 ```
 
-#### 3. 保证更好可读性的同时，创建自定义中间件来实现扩展代码。
+#### 3. 在保持可读性的同时，用自定义中间件扩展代码
 
 期望的请求：
 
 ```http
 POST http://yourdomain.com/api/v1/user/
 Content-Type: application/json
-Auhorization: Token ********
+Authorization: Token ********
 X-Timestamp: ##########
 
 {"firstName":"Fred","lastName":"Flintstone"}
@@ -152,13 +152,13 @@ const createUser = async user => apiV1.post({
     headers: { ...await useToken(), ...useTimestamp() }
 })
 
-const resposne = await createUser({
+const response = await createUser({
     firstName: 'Chun',
     lastName: 'Li'
 })
 ```
 
-Using es-fetch-api, better readability, better maintainability:
+使用 `es-fetch-api`，可读性和可维护性都更好：
 
 ```javascript
 import { getApi, json, POST } from "es-fetch-api";
@@ -176,10 +176,10 @@ const useTimestamp = (ctx, next) => {
 
 const apiV1 = getApi('http://yourdomain.com/api/v1')
 
-// 看见啥读啥，信息不走样 
+// 看见什么写什么，信息不走样
 const createUser = user => apiV1(`user`, POST, json(user), useToken, useTimestamp)
 
-const resposne = await createUser({
+const response = await createUser({
     firstName: 'Chun',
     lastName: 'Li'
 })
@@ -207,7 +207,7 @@ const getUser = id => apiV1.get({ url: `/user`, params: { id } })
 
 ```
 
-使用es-fetch-api来得到更好的可读性、更好的可维护性：
+使用 `es-fetch-api` 来获得更好的可读性和可维护性：
 
 ```javascript
 import { getApi, json, POST } from "es-fetch-api";
@@ -222,7 +222,7 @@ const useTimestamp = async (ctx, next) => {
     return next()
 }
 
-// 只要追加中间件到参数列表就可以啦！就这个feel倍儿爽！
+// 只要把中间件追加到参数列表里即可，维护起来更直接
 const apiV1 = (...args) => getApi('http://yourdomain.com/api/v1')(...args, useToken, useTimestamp)
 
 const createUser = user => apiV1(`user`, POST, json(user))
@@ -268,7 +268,7 @@ const getUser = async id => {
 }
 ```
 
-使用es-fetch-api实现，可读性超燃：
+使用 `es-fetch-api` 实现，可读性更强：
 
 ```javascript
 import { getApi, query } from "es-fetch-api";
@@ -299,7 +299,7 @@ const apiV1 = axios.create({ baseURL: 'http://yourdomain.com/api/v1' })
 
 const getOne = async config => {
     try {
-        const resposne = await apiV1(config)
+        const response = await apiV1(config)
         console.log(response.status, response.statusText)
         const { ok, data, message } = response.data
         return data
@@ -309,7 +309,7 @@ const getOne = async config => {
 }
 ```
 
-用es-fetch-api，可读性超燃：
+用 `es-fetch-api` 实现，可读性更强：
 
 ```javascript
 import { getApi, query } from "es-fetch-api";
@@ -318,7 +318,7 @@ const apiV1 = getApi('http://yourdomain.com/api/v1')
 
 const getOne = async (...args) => {
     try {
-        const resposne = await apiV1(...args, useToken) // 你可以追加自定义中间件
+        const response = await apiV1(...args, useToken) // 你可以追加自定义中间件
         console.log(response.status, response.statusText)
         const { ok, data, message } = await response.json() // 看着啥读啥
         if (!ok) throw { message }  // 想抛异常就抛
@@ -339,6 +339,8 @@ const getUser = id => getOne(`user`, query({ id }))
 何统一的方式。
 
 ## 内建中间件
+
+现在内建中间件既可以从 `es-fetch-api` 导入，也可以从 `es-fetch-api/middlewares` 导入。下面的示例默认使用包根统一出口。
 
 ### `method`中间件
 
@@ -408,7 +410,7 @@ api(query({ hello: [ 'Bing', 'Dwen', 'Dwen' ], world: '2022' })) // http://mydom
 当你使用这个中间件，`Content-Type: application/x-www-form-urlencoded`请求头会被自动设置。
 
 ```javascript
-import { getApi, form } from "es-fetch-api";
+import { getApi, form, POST } from "es-fetch-api";
 
 const api = getApi('http://mydomain.com/api')
 
