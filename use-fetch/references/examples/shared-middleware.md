@@ -1,9 +1,9 @@
 # Shared Middleware
 
-封装公共中间件并应用到所有请求的示例。
+通过 `Fetcher` 构造函数注入公共中间件的示例。
 
 ```javascript
-import { getApi, POST, json } from 'es-fetch-api'
+import { Fetcher, POST, json } from 'es-fetch-api'
 import { getToken } from './auth'
 
 const useToken = async (ctx, next) => {
@@ -16,11 +16,14 @@ const useTimestamp = (ctx, next) => {
     return next()
 }
 
-const api = (...args) => 
-    getApi('https://example.com/api/v1')(...args, useToken, useTimestamp)
+const { getJSON, exec } = new Fetcher(
+    'https://example.com/api/v1',
+    useToken,
+    useTimestamp
+)
 
-export const createUser = payload => api('users', POST, json(payload))
-export const getUser = id => api(`users/${id}`)
+export const createUser = payload => getJSON('users', POST, json(payload))
+export const getUser = id => exec(`users/${id}`)
 ```
 
 适用场景：

@@ -12,7 +12,11 @@
 
 - **`file()` 中间件**：不要给 `file()` 再额外重复包一层数组；它本身已经返回可展开的中间件数组
 
-- **返回值类型**：不要误以为返回值是 axios 风格对象；返回的是原生 `Response`，需要调用 `response.json()` 或 `response.text()` 解析
+- **返回值类型**：`getJSON()` / `getText()` 会直接返回解析结果；只有 `exec()` 才返回原生 `Response`
+
+- **事件流 API**：使用 `fetcher.getEvents('/stream').on(onEvent)`，不要把回调直接塞给 `getEvents()`
+
+- **`onError()` 不会自动吞错**：它是统一拦截点，不是兜底返回值；如果不重新抛新错误，原错误会继续向外冒泡
 
 - **退回手写 fetch**：不要在已经使用该库的代码里退回为手写大型 `fetch` 配置对象，除非用户明确要求
 
@@ -20,10 +24,10 @@
 
 ```javascript
 // ✗ 错误：query() 第二参数不是布尔值
-api('users', query({ id: 1 }, true))
+getJSON('users', query({ id: 1 }, true))
 
 // ✓ 正确：第二参数是配置对象
-api('users', query({ id: 1 }, { append: true }))
+getJSON('users', query({ id: 1 }, { append: true }))
 ```
 
 ```javascript
@@ -42,8 +46,8 @@ const middleware = (ctx, next) => {
 
 ```javascript
 // ✗ 错误：json() 不会自动设置方法
-api('users', json({ name: 'John' }))
+getJSON('users', json({ name: 'John' }))
 
 // ✓ 正确：显式传入方法
-api('users', POST, json({ name: 'John' }))
+getJSON('users', POST, json({ name: 'John' }))
 ```

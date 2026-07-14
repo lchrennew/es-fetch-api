@@ -39,7 +39,7 @@ const middleware = async (ctx, next) => {
 ## Shared auth example
 
 ```javascript
-import { getApi, POST, json } from 'es-fetch-api'
+import { Fetcher, POST, json } from 'es-fetch-api'
 
 const useToken = async (ctx, next) => {
     ctx.header('Authorization', `Bearer ${await getToken()}`)
@@ -51,6 +51,11 @@ const useTimestamp = (ctx, next) => {
     return next()
 }
 
-const api = (...args) => getApi('https://example.com/api/v1')(...args, useToken, useTimestamp)
-export const createUser = payload => api('users', POST, json(payload))
+const { getJSON } = new Fetcher(
+    'https://example.com/api/v1',
+    useToken,
+    useTimestamp
+)
+
+export const createUser = payload => getJSON('users', POST, json(payload))
 ```

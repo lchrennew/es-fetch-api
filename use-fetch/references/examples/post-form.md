@@ -3,12 +3,12 @@
 POST 请求发送表单数据的示例。
 
 ```javascript
-import { getApi, POST, form } from 'es-fetch-api'
+import { Fetcher, POST, form } from 'es-fetch-api'
 
-const api = getApi('https://example.com/api/v1')
+const { getJSON } = new Fetcher('https://example.com/api/v1')
 
-export const login = (username, password) => 
-    api('login', POST, form({ username, password }))
+export const login = (username, password) =>
+    getJSON('login', POST, form({ username, password }))
 ```
 
 `form()` 中间件会：

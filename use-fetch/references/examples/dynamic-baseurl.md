@@ -3,15 +3,14 @@
 基础地址从配置或环境变量动态获取的示例。
 
 ```javascript
-import { getApi, query } from 'es-fetch-api'
+import { Fetcher, query } from 'es-fetch-api'
 
-// 基础地址从配置或环境变量动态获取
-const api = getApi(async () => {
+const { getJSON } = new Fetcher(async () => {
     const config = await fetchAppConfig()
     return config.apiBaseUrl
 })
 
-export const getUser = id => api('users/detail', query({ id }))
+export const getUser = id => getJSON('users/detail', query({ id }))
 ```
 
 适用场景：

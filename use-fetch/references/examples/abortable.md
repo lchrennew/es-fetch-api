@@ -3,12 +3,12 @@
 可取消请求的示例，用于超时控制或用户主动取消。
 
 ```javascript
-import { getApi, abortable, query } from 'es-fetch-api'
+import { Fetcher, abortable, query } from 'es-fetch-api'
 
-const api = getApi('https://example.com/api/v1')
+const { getJSON } = new Fetcher('https://example.com/api/v1')
 
 export const searchUsers = (keyword, controller) =>
-    api('users/search', query({ keyword }), abortable(controller))
+    getJSON('users/search', query({ keyword }), abortable(controller))
 ```
 
 ## 使用示例

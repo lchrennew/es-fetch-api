@@ -2,12 +2,35 @@
 
 本文件说明如何处理响应和调试请求上下文。
 
-## 响应处理
+## 统一错误拦截
 
-这个库不会像部分 HTTP 客户端那样自动把响应体解包。应当按原生 `fetch` 习惯处理：
+如果希望给整个客户端追加统一日志、上报或错误包装，可以使用 `onError()`：
 
 ```javascript
-const response = await api('users/detail', query({ id }))
+import { Fetcher } from 'es-fetch-api'
+
+const fetcher = new Fetcher('https://example.com/api/v1')
+    .onError(error => {
+        console.error('[api-error]', error)
+    })
+```
+
+注意：
+
+- `onError()` 会覆盖 `exec()`、`getJSON()`、`getText()`、`getEvents(...).on(...)`
+- 默认只做拦截，不会吞掉错误；handler 执行后原错误仍会继续抛出
+- 如果要改成自定义错误，可以在 handler 里重新 `throw`
+
+## 响应处理
+
+默认可以直接使用 `getJSON()` / `getText()` 读取响应；如果需要自行处理状态码、headers 或上下文，请使用 `exec()`：
+
+```javascript
+import { Fetcher, query } from 'es-fetch-api'
+
+const { exec } = new Fetcher('https://example.com/api/v1')
+
+const response = await exec('users/detail', query({ id }))
 
 if (!response.ok) {
     const errorBody = await response.json().catch(() => null)
@@ -23,7 +46,11 @@ return data
 如果需要调试请求上下文，可以使用：
 
 ```javascript
-const response = await api('users')
+import { Fetcher } from 'es-fetch-api'
+
+const { exec } = new Fetcher('https://example.com/api/v1')
+
+const response = await exec('users')
 console.log(response.context.url.toString())
 console.log(response.context.headers)
 ```

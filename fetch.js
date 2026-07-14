@@ -5,6 +5,8 @@
 // https://fetch.spec.whatwg.org/#dom-request-method
 
 
+import { asEvents, asJSON, asText } from "./helpers/index.js";
+
 export const credentials = {
     omit: 'omit',
     include: 'include',
@@ -57,7 +59,7 @@ const joinUrl = (baseUrl, ...paths) =>
         baseUrl.replace(/\/$/, ''),
         ...paths
             .map(path => path?.replaceAll(/^\/|\/$/g, ''))
-            .filter(path => path)].join('/')
+            .filter(path => path) ].join('/')
 
 const isURL = target => {
     try {
@@ -101,7 +103,7 @@ export const getApi = webApi => async (...args) => {
     const endpoint = typeof args[0] === 'string' ? args.shift() : undefined
     if (webApi instanceof Function) webApi = await webApi()
     const ctx = new WebApiContext(webApi, endpoint);
-    const middlewares = [...args].flat();
+    const middlewares = [ ...args ].flat();
     const next = () => {
         const middleware = middlewares.shift();
         if (!middleware) return ctx.commit()

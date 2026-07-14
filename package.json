@@ -1,12 +1,21 @@
 {
   "name": "es-fetch-api",
-  "version": "2.0.3",
-  "main": "fetch.js",
-  "types": "index.d.ts",
+  "version": "3.0.0-beta",
+  "main": "index.js",
+  "types": "./types/index.d.ts",
   "exports": {
-    ".": "./fetch.js",
-    "./fetch.js": "./fetch.js",
-    "./middlewares": "./middlewares/index.js",
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./index.js"
+    },
+    "./middlewares": {
+      "types": "./types/middlewares/index.d.ts",
+      "default": "./middlewares/index.js"
+    },
+    "./middlewares/*.js": {
+      "types": "./types/middlewares/*.d.ts",
+      "default": "./middlewares/*.js"
+    },
     "./middlewares/*": "./middlewares/*"
   },
   "license": "MIT",
@@ -26,9 +35,13 @@
     "url": "https://github.com/lchrennew/es-fetch-api.git"
   },
   "files": [
+    "index.js",
     "fetch.js",
-    "middlewares/index.js",
+    "helpers/fetcher.js",
+    "helpers/index.js",
+    "helpers/response.js",
     "middlewares",
+    "types",
     "LICENSE"
   ]
 }

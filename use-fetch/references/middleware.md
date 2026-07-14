@@ -10,8 +10,12 @@
 示例：
 
 ```javascript
-api('users/1', DELETE)
-api('users/1', method('HEAD'))
+import { Fetcher, DELETE, method } from 'es-fetch-api'
+
+const { exec } = new Fetcher('https://example.com/api/v1')
+
+exec('users/1', DELETE)
+exec('users/1', method('HEAD'))
 ```
 
 ## `json(obj)`
@@ -23,10 +27,10 @@ api('users/1', method('HEAD'))
 示例：
 
 ```javascript
-import { getApi, POST, json } from 'es-fetch-api'
+import { Fetcher, POST, json } from 'es-fetch-api'
 
-const api = getApi('https://example.com/api/v1')
-export const createUser = payload => api('users', POST, json(payload))
+const { getJSON } = new Fetcher('https://example.com/api/v1')
+export const createUser = payload => getJSON('users', POST, json(payload))
 ```
 
 ## `form(obj)`
@@ -37,10 +41,10 @@ export const createUser = payload => api('users', POST, json(payload))
 示例：
 
 ```javascript
-import { getApi, POST, form } from 'es-fetch-api'
+import { Fetcher, POST, form } from 'es-fetch-api'
 
-const api = getApi('https://example.com/api/v1')
-export const login = payload => api('login', POST, form(payload))
+const { getJSON } = new Fetcher('https://example.com/api/v1')
+export const login = payload => getJSON('login', POST, form(payload))
 ```
 
 ## `file(name, file, filename?)`
@@ -52,10 +56,10 @@ export const login = payload => api('login', POST, form(payload))
 示例：
 
 ```javascript
-import { getApi, file } from 'es-fetch-api'
+import { Fetcher, file } from 'es-fetch-api'
 
-const api = getApi('https://example.com/api/v1')
-export const uploadAvatar = avatarFile => api('users/avatar', file('avatar', avatarFile))
+const { exec } = new Fetcher('https://example.com/api/v1')
+export const uploadAvatar = avatarFile => exec('users/avatar', file('avatar', avatarFile))
 ```
 
 ## `query(params, options?)`
@@ -69,9 +73,13 @@ export const uploadAvatar = avatarFile => api('users/avatar', file('avatar', ava
 示例：
 
 ```javascript
-api('users', query({ id: 1, role: ['admin', 'editor'] }))
-api('users', query({ page: 2 }, { append: true }))
-api('users', query({ q: undefined }, { includeUndefined: true }))
+import { Fetcher, query } from 'es-fetch-api'
+
+const { getJSON } = new Fetcher('https://example.com/api/v1')
+
+getJSON('users', query({ id: 1, role: ['admin', 'editor'] }))
+getJSON('users', query({ page: 2 }, { append: true }))
+getJSON('users', query({ q: undefined }, { includeUndefined: true }))
 ```
 
 ## `header(obj)`
@@ -79,7 +87,11 @@ api('users', query({ q: undefined }, { includeUndefined: true }))
 将对象批量合并到请求头：
 
 ```javascript
-api('users', header({ Authorization: token, 'X-Tenant': tenantId }))
+import { Fetcher, header } from 'es-fetch-api'
+
+const { exec } = new Fetcher('https://example.com/api/v1')
+
+exec('users', header({ Authorization: token, 'X-Tenant': tenantId }))
 ```
 
 ## `abortable(controller)`
@@ -89,9 +101,9 @@ api('users', header({ Authorization: token, 'X-Tenant': tenantId }))
 示例：
 
 ```javascript
-import { getApi, abortable, query } from 'es-fetch-api'
+import { Fetcher, abortable, query } from 'es-fetch-api'
 
-const api = getApi('https://example.com/api/v1')
+const { getJSON } = new Fetcher('https://example.com/api/v1')
 export const searchUsers = (keyword, controller) =>
-    api('users/search', query({ keyword }), abortable(controller))
+    getJSON('users/search', query({ keyword }), abortable(controller))
 ```
