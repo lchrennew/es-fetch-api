@@ -10,7 +10,6 @@ Very powerful and extensible HTTP client for modern JavaScript runtimes with Fet
 ![GitHub file size in bytes](https://img.shields.io/github/size/lchrennew/es-fetch-api/fetch.js)
 ![GitHub issues](https://img.shields.io/github/issues-raw/lchrennew/es-fetch-api)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/lchrennew/es-fetch-api)
-[![codebeat badge](https://codebeat.co/badges/8987f803-3d78-4959-89bd-6a374f7f3472)](https://codebeat.co/projects/github-com-lchrennew-es-fetch-api-main)
 [![CodeQL](https://github.com/lchrennew/es-fetch-api/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/lchrennew/es-fetch-api/actions/workflows/codeql-analysis.yml)
 
 ## AI Agent Support
