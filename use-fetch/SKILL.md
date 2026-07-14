@@ -12,6 +12,7 @@ compatibility: 适用于当前 JavaScript ESM 项目；依赖 fetch、URL、Form
 
 - 用户要求调用远程 HTTP/REST 接口或封装 API
 - 用户要求追加查询参数、请求头、JSON/Form 请求体、文件上传或取消请求
+- 用户要求根据环境、租户、远程配置动态决定 API 基地址
 - 代码库已使用或应使用 `Fetcher`、中间件链
 
 ## Core approach
@@ -22,6 +23,7 @@ compatibility: 适用于当前 JavaScript ESM 项目；依赖 fetch、URL、Form
 4. 中间件顺序：方法 → 参数/请求体 → 认证/业务头 → 其他
 5. 公共逻辑优先通过构造函数传入公共中间件
 6. 统一错误拦截可使用 `fetcher.onError(errorHandler)`
+7. 当基地址依赖环境、租户、远程配置，或需要延迟加载后才能确定时，优先传入 `async () => baseUrl`，见 [动态 baseUrl](references/examples/dynamic-baseurl.md)
 
 ## Default import
 
@@ -41,6 +43,7 @@ import { Fetcher, POST, json, query, header, abortable } from 'es-fetch-api'
 | 查询参数 | `query(params, options?)` | 第二参数是配置对象 |
 | 批量请求头 | `header(obj)` | 动态头用自定义中间件 |
 | 取消请求 | `abortable(controller)` | - |
+| 动态基地址 | `new Fetcher(async () => baseUrl)` | 适合多环境、租户或远程配置 |
 | 原始响应 | `fetcher.exec()` | 用于状态码判断、读取 headers、深度定制 |
 | 统一错误处理 | `fetcher.onError(handler)` | 默认拦截后仍继续抛错 |
 

@@ -14,7 +14,7 @@
 
 本项目为 AI Agent（如 Trae, Cursor 等）提供了内置的 Skills 支持，帮助 AI 理解并编写基于 `es-fetch-api` 的代码。
 
-- [AI Skills 使用指南](./SKILL.md)
+- [AI Skills 使用指南](./use-fetch/SKILL.md)
 
 ### 安装 Skills
 
@@ -64,12 +64,11 @@ const response = await getUser(12345)
 用 `es-fetch-api` 实现，可读性更好：
 
 ```javascript
-import { getApi, query } from "es-fetch-api";
+import { Fetcher, query } from "es-fetch-api";
 
-// 言简意赅
-const apiV1 = getApi('http://yourdomain.com/api/v1')
+const { getJSON } = new Fetcher('http://yourdomain.com/api/v1')
 
-const getUser = id => apiV1(`user`, query({ id }))
+const getUser = id => getJSON('user', query({ id }))
 
 const response = await getUser(12345)
 ```
@@ -107,12 +106,12 @@ const response = await createUser({
 使用 `es-fetch-api` 来获得更好的可读性：
 
 ```javascript
-import { getApi, json, POST } from "es-fetch-api";
+import { Fetcher, json, POST } from "es-fetch-api";
 
-const apiV1 = getApi('http://yourdomain.com/api/v1')
+const { getJSON } = new Fetcher('http://yourdomain.com/api/v1')
 
 // 看见什么写什么，而且信息不失真
-const createUser = user => apiV1(`user`, POST, json(user))
+const createUser = user => getJSON('user', POST, json(user))
 
 const response = await createUser({
     firstName: 'Chun',
@@ -161,7 +160,7 @@ const response = await createUser({
 使用 `es-fetch-api`，可读性和可维护性都更好：
 
 ```javascript
-import { getApi, json, POST } from "es-fetch-api";
+import { Fetcher, json, POST } from "es-fetch-api";
 import { getToken } from 'token-helper'
 
 // 所见即所读
@@ -174,10 +173,14 @@ const useTimestamp = (ctx, next) => {
     return next()
 }
 
-const apiV1 = getApi('http://yourdomain.com/api/v1')
+const { getJSON } = new Fetcher(
+    'http://yourdomain.com/api/v1',
+    useToken,
+    useTimestamp
+)
 
 // 看见什么写什么，信息不走样
-const createUser = user => apiV1(`user`, POST, json(user), useToken, useTimestamp)
+const createUser = user => getJSON('user', POST, json(user))
 
 const response = await createUser({
     firstName: 'Chun',
@@ -210,7 +213,7 @@ const getUser = id => apiV1.get({ url: `/user`, params: { id } })
 使用 `es-fetch-api` 来获得更好的可读性和可维护性：
 
 ```javascript
-import { getApi, json, POST } from "es-fetch-api";
+import { Fetcher, json, POST } from "es-fetch-api";
 import { getToken } from 'token-helper'
 
 const useToken = async (ctx, next) => {
@@ -222,10 +225,13 @@ const useTimestamp = async (ctx, next) => {
     return next()
 }
 
-// 只要把中间件追加到参数列表里即可，维护起来更直接
-const apiV1 = (...args) => getApi('http://yourdomain.com/api/v1')(...args, useToken, useTimestamp)
+const { getJSON } = new Fetcher(
+    'http://yourdomain.com/api/v1',
+    useToken,
+    useTimestamp
+)
 
-const createUser = user => apiV1(`user`, POST, json(user))
+const createUser = user => getJSON('user', POST, json(user))
 ```
 
 #### 5. 处理响应
@@ -271,13 +277,13 @@ const getUser = async id => {
 使用 `es-fetch-api` 实现，可读性更强：
 
 ```javascript
-import { getApi, query } from "es-fetch-api";
+import { Fetcher, query } from "es-fetch-api";
 
-const apiV1 = getApi('http://yourdomain.com/api/v1')
+const { exec } = new Fetcher('http://yourdomain.com/api/v1')
 
 const getUser = async id => {
     try {
-        const response = await apiV1(`user`, query({ id }))
+        const response = await exec('user', query({ id }))
         console.log(response.status, response.statusText)
         const { ok, data, message } = await response.json() // 见着啥读啥
         if (!ok) throw { message }  // 想抛异常就抛
@@ -312,13 +318,16 @@ const getOne = async config => {
 用 `es-fetch-api` 实现，可读性更强：
 
 ```javascript
-import { getApi, query } from "es-fetch-api";
+import { Fetcher, query } from "es-fetch-api";
 
-const apiV1 = getApi('http://yourdomain.com/api/v1')
+const { exec } = new Fetcher('http://yourdomain.com/api/v1', useToken)
+    .onError(error => {
+        console.log(error)
+    })
 
 const getOne = async (...args) => {
     try {
-        const response = await apiV1(...args, useToken) // 你可以追加自定义中间件
+        const response = await exec(...args)
         console.log(response.status, response.statusText)
         const { ok, data, message } = await response.json() // 看着啥读啥
         if (!ok) throw { message }  // 想抛异常就抛
@@ -328,15 +337,13 @@ const getOne = async (...args) => {
     }
 }
 
-// getOne可以统一处理每个响应。你还可以封装其他逻辑，比如getList
-// 看着啥读啥
-const getUser = id => getOne(`user`, query({ id }))
+const getUser = id => getOne('user', query({ id }))
 ```
 
 ### 一句话理由
 
-在es-fetch-api中，每次调用都是一条中间件链，采用这种结构意味着你能够在不引入更多复杂性的情况下，实现扩展，无论你单独处理请求和响应，还是采用任
-何统一的方式。
+在 `es-fetch-api` 中，`Fetcher` 在同一条中间件链之上提供了一个更小、更清晰的调用面。常见场景用
+`getJSON()`、`getText()`、`getEvents().on()` 就够了；需要完整控制时再下沉到 `exec()`。
 
 ## 内建中间件
 
@@ -347,11 +354,11 @@ const getUser = id => getOne(`user`, query({ id }))
 这个中间件用于设置HTTP请求使用的方法，它接收一个字符串参数用来传入方法名称。如果使用了不支持的方法名称，就会抛出异常。
 
 ```javascript
-import { getApi, method } from "es-fetch-api";
+import { Fetcher, method } from "es-fetch-api";
 
-const api = getApi('http://mydomain.com/api')
+const { exec } = new Fetcher('http://mydomain.com/api')
 
-const response = api('/', method('DELETE'))
+const response = exec('/', method('DELETE'))
 ```
 
 ### `method`别名
@@ -359,11 +366,11 @@ const response = api('/', method('DELETE'))
 `GET`、`POST`、`PUT`、`PATCH`和`DELETE`这几个中间件是对应`method`的缩写。
 
 ```javascript
-import { getApi, DELETE } from "es-fetch-api";
+import { Fetcher, DELETE } from "es-fetch-api";
 
-const api = getApi('http://mydomain.com/api')
+const { exec } = new Fetcher('http://mydomain.com/api')
 
-const response = api('/', DELETE)
+const response = exec('/', DELETE)
 ```
 
 ### `json`中间件
@@ -375,11 +382,11 @@ const response = api('/', DELETE)
 使用此中间件时，`Content-Type: application/json`头会被自动设置。
 
 ```javascript
-import { getApi, POST, json } from "es-fetch-api";
+import { Fetcher, POST, json } from "es-fetch-api";
 
-const api = getApi('http://mydomain.com/api')
+const { exec } = new Fetcher('http://mydomain.com/api')
 
-const response = api('/', POST, json({ hello, world }))
+const response = exec('/', POST, json({ hello, world }))
 ```
 
 ### `query`中间件
@@ -389,16 +396,16 @@ const response = api('/', POST, json({ hello, world }))
 它接收两个参数。
 
 1. 第一个是Object参数，这个对象的键被用于查询参数名，对应的值用于查询参数值。如果值是多元素的数组，就会设置成多值参数。
-2. 第二个是个Boolean参数，用于指明是否将参数值追加到已有的参数上。默认为`false`。
+2. 第二个是配置对象：`{ append?, includeUndefined?, includeNull? }`
 
 ```javascript
-import { getApi, query } from "es-fetch-api";
+import { Fetcher, query } from "es-fetch-api";
 
-const api = getApi('http://mydomain.com/api?hello=1')
+const { exec } = new Fetcher('http://mydomain.com/api?hello=1')
 
-api(query({ hello: 'world' })) // http://mydomain.com/api?hello=world
-api(query({ hello: 'world' }, true)) // http://mydomain.com/api?hello=1&hello=world
-api(query({ hello: [ 'Bing', 'Dwen', 'Dwen' ], world: '2022' })) // http://mydomain.com/api?hello=Bing&hello=Dwen&hello=Dwen&world=2022
+exec(query({ hello: 'world' })) // http://mydomain.com/api?hello=world
+exec(query({ hello: 'world' }, { append: true })) // http://mydomain.com/api?hello=1&hello=world
+exec(query({ hello: [ 'Bing', 'Dwen', 'Dwen' ], world: '2022' })) // http://mydomain.com/api?hello=Bing&hello=Dwen&hello=Dwen&world=2022
 ```
 
 ### `form`中间件
@@ -410,11 +417,11 @@ api(query({ hello: [ 'Bing', 'Dwen', 'Dwen' ], world: '2022' })) // http://mydom
 当你使用这个中间件，`Content-Type: application/x-www-form-urlencoded`请求头会被自动设置。
 
 ```javascript
-import { getApi, form, POST } from "es-fetch-api";
+import { Fetcher, form, POST } from "es-fetch-api";
 
-const api = getApi('http://mydomain.com/api')
+const { exec } = new Fetcher('http://mydomain.com/api')
 
-api(POST, form({ hello: 'world' })) // hello=world
+exec(POST, form({ hello: 'world' })) // hello=world
 ```
 
 ### `file`中间件
@@ -436,12 +443,12 @@ api(POST, form({ hello: 'world' })) // hello=world
 当AbortController::abort()被调用，就会有个异常抛出来。
 
 ```javascript
-import { getApi, abortable } from "es-fetch-api";
+import { Fetcher, abortable } from "es-fetch-api";
 
-const api = getApi('http://mydomain.com/api')
+const { exec } = new Fetcher('http://mydomain.com/api')
 const controller = new AbortController()
 setTimeout(() => controller.abort(), 1000)
-api(abortable(controller))
+exec(abortable(controller))
 ```
 
 ## 中间件开发

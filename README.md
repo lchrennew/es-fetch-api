@@ -17,7 +17,7 @@ Very powerful and extensible HTTP client for modern JavaScript runtimes with Fet
 
 This project provides built-in skills for AI agents (like Trae, Cursor, etc.) to understand and write code using `es-fetch-api`.
 
-- [AI Skills Guide](./SKILL.md)
+- [AI Skills Guide](./use-fetch/SKILL.md)
 
 ### Installation
 
@@ -68,12 +68,11 @@ const response = await getUser(12345)
 Using es-fetch-api, great readability:
 
 ```javascript
-import { getApi, query } from "es-fetch-api";
+import { Fetcher, query } from "es-fetch-api";
 
-// without mincing words
-const apiV1 = getApi('http://yourdomain.com/api/v1')
+const { getJSON } = new Fetcher('http://yourdomain.com/api/v1')
 
-const getUser = id => apiV1(`user`, query({ id }))
+const getUser = id => getJSON('user', query({ id }))
 
 const response = await getUser(12345)
 ```
@@ -108,12 +107,12 @@ const response = await createUser({
 Using es-fetch-api, better readability:
 
 ```javascript
-import { getApi, json, POST } from "es-fetch-api";
+import { Fetcher, json, POST } from "es-fetch-api";
 
-const apiV1 = getApi('http://yourdomain.com/api/v1')
+const { getJSON } = new Fetcher('http://yourdomain.com/api/v1')
 
 // read exactly what you see
-const createUser = user => apiV1(`user`, POST, json(user))
+const createUser = user => getJSON('user', POST, json(user))
 
 const response = await createUser({
     firstName: 'Chun',
@@ -162,7 +161,7 @@ const response = await createUser({
 Using es-fetch-api, better readability, better maintainability:
 
 ```javascript
-import { getApi, json, POST } from "es-fetch-api";
+import { Fetcher, json, POST } from "es-fetch-api";
 import { getToken } from 'token-helper'
 
 // read what you see
@@ -175,10 +174,14 @@ const useTimestamp = (ctx, next) => {
     return next()
 }
 
-const apiV1 = getApi('http://yourdomain.com/api/v1')
+const { getJSON } = new Fetcher(
+    'http://yourdomain.com/api/v1',
+    useToken,
+    useTimestamp
+)
 
 // read exactly what you see
-const createUser = user => apiV1(`user`, POST, json(user), useToken, useTimestamp)
+const createUser = user => getJSON('user', POST, json(user))
 
 const response = await createUser({
     firstName: 'Chun',
@@ -211,7 +214,7 @@ const getUser = id => apiV1.get({ url: `/user`, params: { id } })
 Using es-fetch-api, better readability, better maintainability:
 
 ```javascript
-import { getApi, json, POST } from "es-fetch-api";
+import { Fetcher, json, POST } from "es-fetch-api";
 import { getToken } from 'token-helper'
 
 const useToken = async (ctx, next) => {
@@ -223,10 +226,13 @@ const useTimestamp = (ctx, next) => {
     return next()
 }
 
-// Just append the middlewares, so easy.
-const apiV1 = (...args) => getApi('http://yourdomain.com/api/v1')(...args, useToken, useTimestamp)
+const { getJSON } = new Fetcher(
+    'http://yourdomain.com/api/v1',
+    useToken,
+    useTimestamp
+)
 
-const createUser = async user => await apiV1(`user`, POST, json(user))
+const createUser = async user => await getJSON('user', POST, json(user))
 ```
 
 #### 5. Process responses
@@ -272,13 +278,13 @@ const getUser = async id => {
 Using es-fetch-api, great readability:
 
 ```javascript
-import { getApi, query } from "es-fetch-api";
+import { Fetcher, query } from "es-fetch-api";
 
-const apiV1 = getApi('http://yourdomain.com/api/v1')
+const { exec } = new Fetcher('http://yourdomain.com/api/v1')
 
 const getUser = async id => {
     try {
-        const response = await apiV1(`user`, query({ id }))
+        const response = await exec('user', query({ id }))
         console.log(response.status, response.statusText)
         const { ok, data, message } = await response.json() // read what you see
         if (!ok) throw { message }  // throw the error as you will
@@ -315,13 +321,16 @@ const getOne = async config => {
 Using es-fetch-api, great readability:
 
 ```javascript
-import { getApi, query } from "es-fetch-api";
+import { Fetcher, query } from "es-fetch-api";
 
-const apiV1 = getApi('http://yourdomain.com/api/v1')
+const { exec } = new Fetcher('http://yourdomain.com/api/v1', useToken)
+    .onError(error => {
+        console.error(error)
+    })
 
 const getOne = async (...args) => {
     try {
-        const response = await apiV1(...args, useToken) // you can append custom middlewares here
+        const response = await exec(...args)
         console.log(response.status, response.statusText)
         const { ok, data, message } = await response.json() // read what you see
         if (!ok) throw { message }  // throw the error as you will
@@ -331,15 +340,13 @@ const getOne = async (...args) => {
     }
 }
 
-// getOne can process every response in a unified way. You can also build helpers such as getList
-// read what you see
-const getUser = id => getOne(`user`, query({ id }))
+const getUser = id => getOne('user', query({ id }))
 ```
 
 ### One word reason
 
-In `es-fetch-api`, every API invocation is a middleware chain. That makes the whole flow extensible without adding
-extra complexity, whether you want to handle requests and responses case by case or in a unified way.
+In `es-fetch-api`, `Fetcher` gives you a small, readable surface on top of the same middleware chain. You can stay with
+`getJSON()` / `getText()` / `getEvents().on()` for common cases, and drop down to `exec()` when you need full control.
 
 ## Built-in middlewares
 
@@ -351,11 +358,11 @@ This middleware sets the HTTP method. It accepts a string parameter for the meth
 is used, an exception will be thrown.
 
 ```javascript
-import { getApi, method } from "es-fetch-api";
+import { Fetcher, method } from "es-fetch-api";
 
-const api = getApi('http://mydomain.com/api')
+const { exec } = new Fetcher('http://mydomain.com/api')
 
-const response = api('/', method('DELETE'))
+const response = exec('/', method('DELETE'))
 ```
 
 ### `method` aliases
@@ -363,11 +370,11 @@ const response = api('/', method('DELETE'))
 `GET`, `POST`, `PUT`, `PATCH` and `DELETE`, these are shorthands for each corresponding `method`.
 
 ```javascript
-import { getApi, DELETE } from "es-fetch-api";
+import { Fetcher, DELETE } from "es-fetch-api";
 
-const api = getApi('http://mydomain.com/api')
+const { exec } = new Fetcher('http://mydomain.com/api')
 
-const response = api('/', DELETE)
+const response = exec('/', DELETE)
 ```
 
 ### `json` middleware
@@ -379,11 +386,11 @@ It accepts an `Object` parameter as the request body.
 When you use this middleware, the `Content-Type: application/json` header will be set automatically.
 
 ```javascript
-import { getApi, json, POST } from "es-fetch-api";
+import { Fetcher, json, POST } from "es-fetch-api";
 
-const api = getApi('http://mydomain.com/api')
+const { exec } = new Fetcher('http://mydomain.com/api')
 
-const response = api('/', POST, json({ hello, world }))
+const response = exec('/', POST, json({ hello, world }))
 ```
 
 ### `query` middleware
@@ -394,17 +401,16 @@ It accepts two parameters.
 
 1. an `Object`, whose keys are query parameter names and whose values are the corresponding query parameter values.
    If a value is an array with more than one element, it becomes a multi-value parameter.
-2. a `Boolean`, used to indicate whether each query parameter value should be appended to existing values. By default,
-   it is `false`.
+2. an options object: `{ append?, includeUndefined?, includeNull? }`
 
 ```javascript
-import { getApi, query } from "es-fetch-api";
+import { Fetcher, query } from "es-fetch-api";
 
-const api = getApi('http://mydomain.com/api?hello=1')
+const { exec } = new Fetcher('http://mydomain.com/api?hello=1')
 
-api(query({ hello: 'world' })) // http://mydomain.com/api?hello=world
-api(query({ hello: 'world' }, true)) // http://mydomain.com/api?hello=1&hello=world
-api(query({ hello: [ 'Bing', 'Dwen', 'Dwen' ], world: '2022' })) // http://mydomain.com/api?hello=Bing&hello=Dwen&hello=Dwen&world=2022
+exec(query({ hello: 'world' })) // http://mydomain.com/api?hello=world
+exec(query({ hello: 'world' }, { append: true })) // http://mydomain.com/api?hello=1&hello=world
+exec(query({ hello: [ 'Bing', 'Dwen', 'Dwen' ], world: '2022' })) // http://mydomain.com/api?hello=Bing&hello=Dwen&hello=Dwen&world=2022
 ```
 
 ### `form` middleware
@@ -416,11 +422,11 @@ It accepts an `Object` parameter as the form data.
 When you use this middleware, the `Content-Type: application/x-www-form-urlencoded` header will be set automatically.
 
 ```javascript
-import { getApi, form, POST } from "es-fetch-api";
+import { Fetcher, form, POST } from "es-fetch-api";
 
-const api = getApi('http://mydomain.com/api')
+const { exec } = new Fetcher('http://mydomain.com/api')
 
-api(POST, form({ hello: 'world' })) // hello=world
+exec(POST, form({ hello: 'world' })) // hello=world
 ```
 
 ### `file` middleware
@@ -442,12 +448,12 @@ You can use it to implement manual abort, timeout abort and so on.
 When the AbortController::abort() is invoked, an exception will be thrown.
 
 ```javascript
-import { getApi, abortable } from "es-fetch-api";
+import { Fetcher, abortable } from "es-fetch-api";
 
-const api = getApi('http://mydomain.com/api')
+const { exec } = new Fetcher('http://mydomain.com/api')
 const controller = new AbortController()
 setTimeout(() => controller.abort(), 1000)
-api(abortable(controller))
+exec(abortable(controller))
 ```
 
 ## Middleware development
